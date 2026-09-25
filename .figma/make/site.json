@@ -1,0 +1,10 @@
+{
+  "description": "Streamline project planning with AI-driven intake, scope review, WBS building, constraint management, and optimization for efficient resource use and scheduling.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
