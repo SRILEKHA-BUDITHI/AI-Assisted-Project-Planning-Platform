@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import type { Screen } from '../App'
-
-interface Props { nav: (s: Screen) => void }
+import { useNavigate } from 'react-router'
+import { useStepNav } from '@/lib/steps'
 
 const SAMPLE_TEXT = `Meeting Notes — Enterprise Data Platform Kickoff
 Date: January 15, 2025 | Attendees: Robert Walsh (VP Eng), Jane Doe (PM), Sara Kim (Lead Architect), Mark Chen (Data Engineer)
@@ -28,7 +27,9 @@ OPEN ITEMS / UNKNOWNS
 • Disaster recovery SLA not defined
 • Training plan for 300 end-users not scoped`
 
-export default function AIProjectIntake({ nav }: Props) {
+export default function AIProjectIntake() {
+  const nav = useStepNav()
+  const navigate = useNavigate()
   const [analyzing, setAnalyzing] = useState(false)
   const [analyzed, setAnalyzed] = useState(false)
 
@@ -110,7 +111,7 @@ export default function AIProjectIntake({ nav }: Props) {
 
           {/* Analyze button */}
           <div className="flex items-center justify-between" style={{ marginTop: 20 }}>
-            <button onClick={() => nav('create-project')} style={secondaryBtn}>← Back</button>
+            <button onClick={() => navigate('/')} style={secondaryBtn}>← Back to Dashboard</button>
             <div className="flex items-center gap-10">
               {analyzed && (
                 <span style={{ fontSize: 13, color: '#3d7a3d', fontWeight: 500 }}>✓ Analysis complete — 6 sections extracted</span>
@@ -132,7 +133,7 @@ export default function AIProjectIntake({ nav }: Props) {
                 {analyzing ? 'Analyzing…' : analyzed ? 'Re-Analyze' : 'Analyze Project'}
               </button>
               {analyzed && (
-                <button onClick={() => nav('scope-review')} style={{ ...primaryBtn, background: '#3d7a3d' }}>
+                <button onClick={() => nav('scope')} style={{ ...primaryBtn, background: '#3d7a3d' }}>
                   Continue to Scope Review →
                 </button>
               )}

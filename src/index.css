@@ -60,3 +60,11 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
 .mono { font-family: 'DM Mono', monospace; }
+
+/* Baseline keyboard focus ring; components can override with Tailwind utilities. */
+@layer base {
+  :where(a, button, select, summary, [role='link'], [tabindex]):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

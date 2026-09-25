@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Screen } from '../App'
+import { useStepNav } from '@/lib/steps'
 
 interface Item { id: string; text: string; accepted: boolean; removed: boolean }
 
@@ -47,9 +47,8 @@ const SECTION_COLOR: Record<string, string> = {
   'Missing Information': '#f5f5f5',
 }
 
-interface Props { nav: (s: Screen) => void }
-
-export default function ScopeReview({ nav }: Props) {
+export default function ScopeReview() {
+  const nav = useStepNav()
   const [sections, setSections] = useState(INITIAL)
   const [editing, setEditing] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
@@ -174,8 +173,8 @@ export default function ScopeReview({ nav }: Props) {
       </div>
 
       <div className="flex items-center justify-between" style={{ marginTop: 24 }}>
-        <button onClick={() => nav('ai-intake')} style={secondaryBtn}>← Back to AI Intake</button>
-        <button onClick={() => nav('wbs-builder')} style={primaryBtn}>Continue to WBS Builder →</button>
+        <button onClick={() => nav('intake')} style={secondaryBtn}>← Back to AI Intake</button>
+        <button onClick={() => nav('wbs')} style={primaryBtn}>Continue to WBS Builder →</button>
       </div>
     </div>
   )
