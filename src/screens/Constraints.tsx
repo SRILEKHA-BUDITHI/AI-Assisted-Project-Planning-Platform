@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Screen } from '../App'
+import { useStepNav } from '@/lib/steps'
 
 type ConstraintType = 'hard' | 'soft'
 
@@ -22,9 +22,8 @@ const DEPS: Dep[] = [
   { from: '1.4.1 RBAC', to: '1.3.3 Self-Service Analytics', type: 'Start-to-Start' },
 ]
 
-interface Props { nav: (s: Screen) => void }
-
-export default function Constraints({ nav }: Props) {
+export default function Constraints() {
+  const nav = useStepNav()
   const [budgetType, setBudgetType] = useState<ConstraintType>('hard')
   const [deadlineType, setDeadlineType] = useState<ConstraintType>('hard')
   const [capacityType, setCapacityType] = useState<ConstraintType>('soft')
@@ -199,8 +198,8 @@ export default function Constraints({ nav }: Props) {
       </div>
 
       <div className="flex justify-between" style={{ marginTop: 24 }}>
-        <button onClick={() => nav('wbs-builder')} style={secondaryBtn}>← Back to WBS Builder</button>
-        <button onClick={() => nav('optimization-results')} style={primaryBtn}>Run Gurobi Optimization →</button>
+        <button onClick={() => nav('wbs')} style={secondaryBtn}>← Back to WBS Builder</button>
+        <button onClick={() => nav('optimization')} style={primaryBtn}>Run Gurobi Optimization →</button>
       </div>
     </div>
   )

@@ -1,0 +1,20 @@
+# Code owners are requested for review automatically, and main's branch
+# protection requires their approval before merge.
+# Replace the TODO handles with teammates' GitHub usernames.
+
+# Default: project lead
+*                       @SRILEKHA-BUDITHI
+
+# Database — schema, migrations, RLS policies, DB tests
+/supabase/              @SRILEKHA-BUDITHI
+
+# Backend — FastAPI service
+/backend/               @SRILEKHA-BUDITHI
+# /backend/             @TODO-backend-teammate
+
+# Frontend — React app
+/src/                   @SRILEKHA-BUDITHI
+# /src/                 @TODO-frontend-teammate
+
+# Delivery pipeline — changes here affect production
+/.github/               @SRILEKHA-BUDITHI
