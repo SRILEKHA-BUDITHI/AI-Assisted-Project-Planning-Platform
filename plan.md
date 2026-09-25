@@ -560,3 +560,22 @@ Audio STT intake · OCR for scanned PDFs · real-time collaboration on the WBS �
 2. Approve the stack in §2.1, or tell me what to change (e.g. if the team prefers Node/NestJS, the plan still holds, but the optimizer becomes a separate Python service).
 3. Start Phase 0: scaffold `backend/`, docker-compose, CI, and the seed data.
 4. In parallel, run a **2–3 day optimization spike** with the prototype's demo data (14 work packages, 5 employees, the 5 dependencies) to validate the MILP formulation before building the rest around it.
+
+---
+
+## 14. Task tracker
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Foundation: DB schema + RLS, FastAPI, Supabase Auth UI, CI/CD | ✅ Done (branch `feat/foundation`) |
+| 2 | Railway project `projectai`: services `web` + `api`, domains, base variables | ✅ Done |
+| 3 | Supabase production project, migrations pushed, keys wired into Railway + GitHub secrets | ⏳ Waiting on `supabase login` |
+| 4 | Push branch, PR, CI green, connect Railway services to GitHub (`main`, Wait for CI), first deploy | ⏳ Waiting on `gh auth login` |
+| 5 | **Cloudflare: Pages for the frontend + custom domain DNS** | 📝 Next task: plan first, then execute |
+| 6 | Google + Microsoft OAuth apps, custom SMTP (Resend) for auth emails | Planned |
+| 7 | AI intake, WBS, OR-Tools optimizer (Phases 2–5 of §11) | Planned |
+
+### Current Railway resources
+- Project: `projectai` (id `cef0a0bb-18d6-4638-a6c8-56e9d62c4d52`), environment `production`
+- `web` → https://web-production-e916f.up.railway.app
+- `api` → https://api-production-c6141.up.railway.app
