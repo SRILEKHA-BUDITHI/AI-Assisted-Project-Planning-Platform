@@ -43,6 +43,7 @@ jobs:
               - 'tsconfig.json'
               - 'Dockerfile.web'
               - 'Caddyfile'
+              - '.figma/make/site.json'
             api:
               - 'backend/**'
             db:
