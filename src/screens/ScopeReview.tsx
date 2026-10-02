@@ -39,12 +39,12 @@ const INITIAL: Record<string, Item[]> = {
 }
 
 const SECTION_COLOR: Record<string, string> = {
-  Objectives: '#e8f0e8',
-  Requirements: '#e8eaf0',
-  Deliverables: '#f0ece8',
-  Constraints: '#f0e8e8',
-  Risks: '#fdf2e8',
-  'Missing Information': '#f5f5f5',
+  Objectives: '#dcf3e8',
+  Requirements: '#e1e8fb',
+  Deliverables: '#fdeedd',
+  Constraints: '#fde8ee',
+  Risks: '#fdeedd',
+  'Missing Information': '#f4f2fc',
 }
 
 export default function ScopeReview() {
@@ -92,13 +92,13 @@ export default function ScopeReview() {
       <div className="flex items-start justify-between" style={{ marginBottom: 24 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700 }}>Scope Review</div>
-          <div style={{ fontSize: 13, color: '#737373', marginTop: 2 }}>
+          <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
             Review AI-extracted project information. Accept, edit, or remove each item.
           </div>
         </div>
         <div className="flex items-center gap-10">
-          <span style={{ fontSize: 13, color: '#737373' }}>
-            <strong style={{ color: '#1a1a1a' }}>{totalAccepted}</strong> / {total} accepted
+          <span style={{ fontSize: 13, color: '#6b6987' }}>
+            <strong style={{ color: '#23223a' }}>{totalAccepted}</strong> / {total} accepted
           </span>
           <button onClick={acceptAll} style={secondaryBtn}>Accept All</button>
         </div>
@@ -112,12 +112,12 @@ export default function ScopeReview() {
             <div key={section} style={cardStyle}>
               <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
                 <div className="flex items-center gap-8">
-                  <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#555' }}>{section}</span>
-                  <span style={{ fontSize: 10, fontFamily: 'DM Mono, monospace', padding: '2px 8px', background: SECTION_COLOR[section] || '#f5f5f5', borderRadius: 10, color: '#555' }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#5a5878' }}>{section}</span>
+                  <span style={{ fontSize: 10, fontFamily: 'DM Mono, monospace', padding: '2px 8px', background: SECTION_COLOR[section] || '#f4f2fc', borderRadius: 10, color: '#5a5878' }}>
                     {accepted}/{visible.length} accepted
                   </span>
                 </div>
-                <button style={{ fontSize: 11, color: '#737373', background: 'none', border: 'none', cursor: 'pointer' }}>+ Add item</button>
+                <button style={{ fontSize: 11, color: '#6b6987', background: 'none', border: 'none', cursor: 'pointer' }}>+ Add item</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {visible.map(item => (
@@ -128,12 +128,12 @@ export default function ScopeReview() {
                       alignItems: 'flex-start',
                       gap: 10,
                       padding: '8px 10px',
-                      background: item.accepted ? '#f9fdf9' : '#fafafa',
-                      border: `1px solid ${item.accepted ? '#c8dfc8' : '#e8e8e8'}`,
+                      background: item.accepted ? '#f9fdf9' : '#faf9fe',
+                      border: `1px solid ${item.accepted ? '#b9e3cf' : '#e4e2f7'}`,
                       borderRadius: 4,
                     }}
                   >
-                    <span style={{ fontSize: 14, marginTop: 1, color: item.accepted ? '#3d7a3d' : '#ccc', flexShrink: 0 }}>
+                    <span style={{ fontSize: 14, marginTop: 1, color: item.accepted ? '#3f8a6a' : '#ccc', flexShrink: 0 }}>
                       {item.accepted ? '✓' : '○'}
                     </span>
                     <div style={{ flex: 1, fontSize: 13, lineHeight: 1.5 }}>
@@ -145,8 +145,8 @@ export default function ScopeReview() {
                             style={{ flex: 1, padding: '4px 8px', border: '1px solid #bbb', borderRadius: 3, fontSize: 13, fontFamily: 'inherit' }}
                             autoFocus
                           />
-                          <button onClick={() => saveEdit(section, item.id)} style={{ fontSize: 12, padding: '4px 10px', background: '#2d2d2d', color: '#fff', border: 'none', borderRadius: 3, cursor: 'pointer' }}>Save</button>
-                          <button onClick={() => setEditing(null)} style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #d4d4d4', borderRadius: 3, cursor: 'pointer', background: '#fff' }}>Cancel</button>
+                          <button onClick={() => saveEdit(section, item.id)} style={{ fontSize: 12, padding: '4px 10px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 3, cursor: 'pointer' }}>Save</button>
+                          <button onClick={() => setEditing(null)} style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #d9d6ee', borderRadius: 3, cursor: 'pointer', background: '#fff' }}>Cancel</button>
                         </div>
                       ) : (
                         item.text
@@ -155,10 +155,10 @@ export default function ScopeReview() {
                     {editing !== item.id && (
                       <div className="flex gap-4" style={{ flexShrink: 0 }}>
                         {!item.accepted && (
-                          <button onClick={() => accept(section, item.id)} style={miniBtn('#3d7a3d', '#e8f5e8')}>Accept</button>
+                          <button onClick={() => accept(section, item.id)} style={miniBtn('#3f8a6a', '#dcf3e8')}>Accept</button>
                         )}
-                        <button onClick={() => startEdit(item.id, item.text)} style={miniBtn('#2d2d2d', '#f5f5f5')}>Edit</button>
-                        <button onClick={() => remove(section, item.id)} style={miniBtn('#b03030', '#fef5f5')}>Remove</button>
+                        <button onClick={() => startEdit(item.id, item.text)} style={miniBtn('#4b4a9e', '#f4f2fc')}>Edit</button>
+                        <button onClick={() => remove(section, item.id)} style={miniBtn('#c4506a', '#fde8ee')}>Remove</button>
                       </div>
                     )}
                   </div>
@@ -182,11 +182,11 @@ export default function ScopeReview() {
 
 function Breadcrumb({ steps }: { steps: string[] }) {
   return (
-    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#737373', marginBottom: 20 }}>
+    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
       {steps.map((s, i) => (
         <span key={s} className="flex items-center gap-2">
           {i > 0 && <span>›</span>}
-          <span style={{ color: i === steps.length - 1 ? '#1a1a1a' : '#737373' }}>{s}</span>
+          <span style={{ color: i === steps.length - 1 ? '#23223a' : '#6b6987' }}>{s}</span>
         </span>
       ))}
     </div>
@@ -197,6 +197,6 @@ function miniBtn(color: string, bg: string): React.CSSProperties {
   return { fontSize: 11, padding: '3px 8px', background: bg, color, border: `1px solid ${color}22`, borderRadius: 3, cursor: 'pointer', fontWeight: 500 }
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, padding: '16px 18px' }
-const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#2d2d2d', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
-const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#3a3a3a', border: '1px solid #d4d4d4', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
+const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '16px 18px' }
+const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
+const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#38375a', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, cursor: 'pointer' }

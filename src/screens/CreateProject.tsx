@@ -136,7 +136,7 @@ export default function CreateProject() {
   const fieldRefs = useRef<Partial<Record<FieldName, HTMLElement | null>>>({})
 
   useEffect(() => {
-    document.title = 'Create Project · ProjectAI'
+    document.title = 'Create Project · NirnAIn'
   }, [])
 
   // PM candidates: org members, always including the current user as the default.
@@ -236,7 +236,7 @@ export default function CreateProject() {
 
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Create New Project</h1>
-        <div style={{ fontSize: 13, color: '#737373', marginTop: 2 }}>
+        <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
           Define the basic parameters for your project. AI will use this context during intake.
         </div>
       </div>
@@ -417,7 +417,7 @@ export default function CreateProject() {
         <div className="flex items-center justify-between" style={{ marginTop: 24 }}>
           <Link
             to="/"
-            className="inline-flex items-center rounded-[4px] border border-[#d4d4d4] bg-white px-4 py-[9px] text-[13px] text-[#3a3a3a] hover:bg-[#fafafa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d]"
+            className="inline-flex items-center rounded-[4px] border border-border bg-white px-4 py-[9px] text-[13px] text-secondary-foreground hover:bg-[#faf9fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             ← Back to Dashboard
           </Link>
@@ -437,12 +437,12 @@ export default function CreateProject() {
 
 function Breadcrumb() {
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-2" style={{ fontSize: 12, color: '#737373', marginBottom: 20 }}>
-      <Link to="/" className="hover:text-[#1a1a1a] hover:underline">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
+      <Link to="/" className="hover:text-foreground hover:underline">
         Dashboard
       </Link>
       <span aria-hidden="true">›</span>
-      <span aria-current="page" style={{ color: '#1a1a1a' }}>
+      <span aria-current="page" style={{ color: '#23223a' }}>
         Create Project
       </span>
     </nav>
@@ -451,7 +451,7 @@ function Breadcrumb() {
 
 function SectionLabel({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
-    <div style={{ fontSize: 11, fontWeight: 600, color: '#737373', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #f0f0f0', ...style }}>
+    <div style={{ fontSize: 11, fontWeight: 600, color: '#6b6987', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #eeecf9', ...style }}>
       {children}
     </div>
   )
@@ -475,7 +475,7 @@ function Field({
   const hintId = useId()
   return (
     <div>
-      <label htmlFor={htmlFor} style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 5, color: '#3a3a3a' }}>
+      <label htmlFor={htmlFor} style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 5, color: '#38375a' }}>
         {label}
         {required && (
           <span aria-hidden="true" style={{ color: '#999', marginLeft: 2 }}>
@@ -485,12 +485,12 @@ function Field({
       </label>
       {children}
       {error && (
-        <p id={`${htmlFor}-error`} style={{ margin: '5px 0 0', fontSize: 12, color: '#b03030' }}>
+        <p id={`${htmlFor}-error`} style={{ margin: '5px 0 0', fontSize: 12, color: '#c4506a' }}>
           {error}
         </p>
       )}
       {hint && !error && (
-        <p id={hintId} style={{ margin: '5px 0 0', fontSize: 12, color: '#737373' }}>
+        <p id={hintId} style={{ margin: '5px 0 0', fontSize: 12, color: '#6b6987' }}>
           {hint}
         </p>
       )}
@@ -499,6 +499,6 @@ function Field({
 }
 
 const fieldClass =
-  'w-full rounded-[4px] border border-[#d4d4d4] bg-white px-2.5 py-2 text-[13px] text-[#1a1a1a] font-[inherit] outline-none transition-[border-color,box-shadow] placeholder:text-[#a3a3a3] focus:border-[#2d2d2d] focus:shadow-[0_0_0_3px_rgba(45,45,45,0.12)] aria-[invalid=true]:border-[#b03030] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(176,48,48,0.14)]'
+  'w-full rounded-[4px] border border-border bg-white px-2.5 py-2 text-[13px] text-foreground font-[inherit] outline-none transition-[border-color,box-shadow] placeholder:text-[#9b98b5] focus:border-primary focus:shadow-[0_0_0_3px_rgba(75,74,158,0.16)] aria-[invalid=true]:border-[#c4506a] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(196,80,106,0.16)]'
 
-const cardStyle: CSSProperties = { background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, padding: '24px 24px' }
+const cardStyle: CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '24px 24px' }

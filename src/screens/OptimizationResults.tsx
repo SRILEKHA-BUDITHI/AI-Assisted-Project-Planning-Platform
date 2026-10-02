@@ -25,10 +25,52 @@ const RESOURCE_UTIL = [
   { name: 'SAP Contractor', before: 0, after: 100 },
 ]
 
+const SCENARIOS = [
+  {
+    id: 'recommended',
+    name: 'Recommended Plan',
+    status: 'Feasible',
+    budget: '$361,200',
+    budgetNote: '$13,800 under budget',
+    completion: 'Oct 14, 2025',
+    completionNote: '14 days over target',
+    utilization: '77%',
+    recommendation: 'Assign SAP Integration to a contract SAP specialist and move Performance Tuning to weeks 16–17.',
+    note: 'All hard constraints are satisfied with one external SAP specialist.',
+  },
+  {
+    id: 'internal-only',
+    name: 'Internal Team Only',
+    status: 'Infeasible',
+    budget: '$344,800',
+    budgetNote: '$30,200 under budget',
+    completion: 'Nov 25, 2025',
+    completionNote: '6 weeks later',
+    utilization: '96%',
+    recommendation: 'No valid reassignment resolves the SAP skill gap and Mark Chen’s overallocation.',
+    note: 'Skill coverage and maximum-capacity constraints cannot both be satisfied.',
+  },
+  {
+    id: 'accelerated',
+    name: 'Accelerated Delivery',
+    status: 'Feasible',
+    budget: '$373,900',
+    budgetNote: '$1,100 under budget',
+    completion: 'Sep 30, 2025',
+    completionNote: 'Meets target date',
+    utilization: '84%',
+    recommendation: 'Add the SAP specialist and assign Lisa Park to Internal DB Pipelines for parallel delivery.',
+    note: 'Meets the target date with higher utilization and contractor spend.',
+  },
+] as const
+
 export default function OptimizationResults() {
   const nav = useStepNav()
   const [activeTab, setActiveTab] = useState<'reassignments' | 'schedule' | 'resources'>('reassignments')
   const [applied, setApplied] = useState(false)
+  const [scenarioId, setScenarioId] = useState<string>('recommended')
+  const scenario = SCENARIOS.find(item => item.id === scenarioId) ?? SCENARIOS[0]
+  const isFeasible = scenario.status === 'Feasible'
 
   return (
     <div style={{ padding: '32px 36px', maxWidth: 1100 }}>
@@ -37,41 +79,93 @@ export default function OptimizationResults() {
       <div className="flex items-start justify-between" style={{ marginBottom: 24 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700 }}>Optimization Results</div>
-          <div style={{ fontSize: 13, color: '#737373', marginTop: 2 }}>
-            Gurobi solver completed. Review recommended plan adjustments before finalizing.
+          <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
+            OR-Tools solver completed. Review recommended plan adjustments before finalizing.
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: '#e8f5e8', border: '1px solid #c8dfc8', borderRadius: 6 }}>
-          <span style={{ fontSize: 13, color: '#3d7a3d', fontWeight: 600 }}>✓ Optimization Complete</span>
-          <span style={{ fontSize: 12, color: '#5a9a5a', fontFamily: 'DM Mono, monospace' }}>Gurobi v11.0.1 · 4.3s</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: isFeasible ? '#dcf3e8' : '#fde8ee', border: `1px solid ${isFeasible ? '#b9e3cf' : '#f1c6d2'}`, borderRadius: 6 }}>
+          <span style={{ fontSize: 13, color: isFeasible ? '#3f8a6a' : '#c4506a', fontWeight: 600 }}>{scenario.status.toUpperCase()}</span>
+          <span style={{ fontSize: 12, color: isFeasible ? '#5a9a5a' : '#a05a5a', fontFamily: 'DM Mono, monospace' }}>OR-Tools CP-SAT · 4.3s</span>
         </div>
       </div>
 
       {/* KPIs */}
       <div className="grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: 14, marginBottom: 24 }}>
         {[
-          { label: 'Solver Status', value: 'Optimal', sub: 'Feasible solution found', color: '#3d7a3d' },
-          { label: 'Expected Cost', value: '$361,200', sub: '↓ $13,800 under budget', color: '#3d7a3d' },
-          { label: 'Completion Date', value: 'Oct 14, 2025', sub: '↑ 14 days over target', color: '#c47a00' },
-          { label: 'Avg. Utilization', value: '77%', sub: 'Across 6 resources', color: '#2d2d2d' },
-          { label: 'Critical Path', value: '38 weeks', sub: 'SAP → ETL → BI chain', color: '#2d2d2d' },
+          { label: 'Solver Status', value: scenario.status, sub: isFeasible ? 'All hard constraints satisfied' : 'Hard constraints conflict', color: isFeasible ? '#3f8a6a' : '#c4506a' },
+          { label: 'Budget', value: scenario.budget, sub: scenario.budgetNote, color: isFeasible ? '#3f8a6a' : '#4b4a9e' },
+          { label: 'Completion Date', value: scenario.completion, sub: scenario.completionNote, color: scenario.id === 'accelerated' ? '#3f8a6a' : '#a8691f' },
+          { label: 'Resource Utilization', value: scenario.utilization, sub: 'Average across 6 resources', color: scenario.id === 'internal-only' ? '#c4506a' : '#4b4a9e' },
+          { label: 'Critical Path', value: '38 weeks', sub: 'SAP → ETL → BI chain', color: '#4b4a9e' },
         ].map(k => (
           <div key={k.label} style={cardStyle}>
-            <div style={{ fontSize: 10, color: '#737373', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>{k.label}</div>
+            <div style={{ fontSize: 10, color: '#6b6987', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>{k.label}</div>
             <div style={{ fontSize: 20, fontWeight: 700, color: k.color, marginBottom: 2 }}>{k.value}</div>
-            <div style={{ fontSize: 11, color: '#737373' }}>{k.sub}</div>
+            <div style={{ fontSize: 11, color: '#6b6987' }}>{k.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Feasibility notice */}
-      <div style={{ padding: '12px 16px', background: '#fdf2e8', border: '1px solid #f0d898', borderRadius: 6, fontSize: 13, color: '#8a5a00', marginBottom: 20 }}>
-        <strong>Note:</strong> A fully feasible solution requires contracting one SAP specialist (est. $28K). Without this, the schedule extends by 6 weeks and the budget constraint becomes infeasible. This is reflected in the recommendations below.
+      <div style={{ padding: '12px 16px', background: isFeasible ? '#f6f5fd' : '#fde8ee', border: `1px solid ${isFeasible ? '#d9d6ee' : '#f1c6d2'}`, borderRadius: 6, marginBottom: 20 }}>
+        <div style={{ fontSize: 10, color: isFeasible ? '#6b6987' : '#c4506a', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+          Recommended reassignment
+        </div>
+        <div style={{ fontSize: 13, color: '#38375a', marginBottom: 3 }}>{scenario.recommendation}</div>
+        <div style={{ fontSize: 11, color: '#6b6987' }}>{scenario.note}</div>
+      </div>
+
+      {/* Alternative scenarios */}
+      <div style={{ marginBottom: 20 }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 13, fontWeight: 600 }}>Alternative Scenarios</div>
+          <div style={{ fontSize: 11, color: '#6b6987' }}>Select a scenario to compare solver outcomes</div>
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          {SCENARIOS.map(item => {
+            const selected = item.id === scenario.id
+            const feasible = item.status === 'Feasible'
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setScenarioId(item.id)
+                  setApplied(false)
+                }}
+                style={{
+                  ...cardStyle,
+                  padding: '14px 16px',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  border: selected ? '2px solid #4b4a9e' : '1px solid #e4e2f7',
+                  background: selected ? '#faf9fe' : '#fff',
+                }}
+              >
+                <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#23223a' }}>{item.name}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: feasible ? '#3f8a6a' : '#c4506a', textTransform: 'uppercase' }}>{item.status}</span>
+                </div>
+                <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                  {[
+                    ['Budget', item.budget],
+                    ['Completion', item.completion.replace(', 2025', '')],
+                    ['Utilization', item.utilization],
+                  ].map(([label, value]) => (
+                    <span key={label}>
+                      <span style={{ display: 'block', fontSize: 9, color: '#6b6987', textTransform: 'uppercase', marginBottom: 2 }}>{label}</span>
+                      <span style={{ display: 'block', fontSize: 11, color: '#4b4a9e', fontFamily: 'DM Mono, monospace' }}>{value}</span>
+                    </span>
+                  ))}
+                </div>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Tabs */}
       <div style={{ ...cardStyle, marginBottom: 20 }}>
-        <div className="flex gap-0" style={{ borderBottom: '1px solid #e8e8e8', marginBottom: 20 }}>
+        <div className="flex gap-0" style={{ borderBottom: '1px solid #e4e2f7', marginBottom: 20 }}>
           {(['reassignments', 'schedule', 'resources'] as const).map(tab => (
             <button
               key={tab}
@@ -79,11 +173,11 @@ export default function OptimizationResults() {
               style={{
                 padding: '10px 20px',
                 border: 'none',
-                borderBottom: activeTab === tab ? '2px solid #2d2d2d' : '2px solid transparent',
+                borderBottom: activeTab === tab ? '2px solid #4b4a9e' : '2px solid transparent',
                 background: 'transparent',
                 fontSize: 13,
                 fontWeight: activeTab === tab ? 600 : 400,
-                color: activeTab === tab ? '#1a1a1a' : '#737373',
+                color: activeTab === tab ? '#23223a' : '#6b6987',
                 cursor: 'pointer',
                 marginBottom: -1,
               }}
@@ -96,19 +190,19 @@ export default function OptimizationResults() {
         {activeTab === 'reassignments' && (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #e8e8e8' }}>
+              <tr style={{ borderBottom: '1px solid #e4e2f7' }}>
                 {['Task', 'Current Assignment', 'Recommended', 'Reason'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', padding: '6px 12px', fontSize: 10, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                  <th key={h} style={{ textAlign: 'left', padding: '6px 12px', fontSize: 10, color: '#6b6987', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {REASSIGNMENTS.map((r, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                <tr key={i} style={{ borderBottom: '1px solid #f4f2fc' }}>
                   <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12 }}>{r.task}</td>
-                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#737373' }}>{r.current}</td>
-                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#2d2d2d', fontWeight: 500 }}>{r.recommended}</td>
-                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#555' }}>{r.reason}</td>
+                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#6b6987' }}>{r.current}</td>
+                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#4b4a9e', fontWeight: 500 }}>{r.recommended}</td>
+                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#5a5878' }}>{r.reason}</td>
                 </tr>
               ))}
             </tbody>
@@ -118,25 +212,25 @@ export default function OptimizationResults() {
         {activeTab === 'schedule' && (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #e8e8e8' }}>
+              <tr style={{ borderBottom: '1px solid #e4e2f7' }}>
                 {['WBS', 'Task', 'Original', 'Optimized', 'Delta', 'Reason'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', padding: '6px 12px', fontSize: 10, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                  <th key={h} style={{ textAlign: 'left', padding: '6px 12px', fontSize: 10, color: '#6b6987', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {SCHEDULE_CHANGES.map((r, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                  <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#737373' }}>{r.wbs}</td>
+                <tr key={i} style={{ borderBottom: '1px solid #f4f2fc' }}>
+                  <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6b6987' }}>{r.wbs}</td>
                   <td style={{ padding: '10px 12px', fontWeight: 500 }}>{r.name}</td>
-                  <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#737373' }}>{r.original}</td>
+                  <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6b6987' }}>{r.original}</td>
                   <td style={{ padding: '10px 12px', fontFamily: 'DM Mono, monospace', fontSize: 12 }}>{r.optimized}</td>
                   <td style={{ padding: '10px 12px' }}>
-                    <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: r.delta === '—' ? '#f0f0f0' : '#fdf2e8', color: r.delta === '—' ? '#737373' : '#c47a00', fontFamily: 'DM Mono, monospace', fontWeight: 600 }}>
+                    <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: r.delta === '—' ? '#eeecf9' : '#fdeedd', color: r.delta === '—' ? '#6b6987' : '#a8691f', fontFamily: 'DM Mono, monospace', fontWeight: 600 }}>
                       {r.delta}
                     </span>
                   </td>
-                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#555' }}>{r.reason}</td>
+                  <td style={{ padding: '10px 12px', fontSize: 12, color: '#5a5878' }}>{r.reason}</td>
                 </tr>
               ))}
             </tbody>
@@ -145,7 +239,7 @@ export default function OptimizationResults() {
 
         {activeTab === 'resources' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr 1fr 80px', gap: 10, alignItems: 'center', marginBottom: 10, fontSize: 10, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr 1fr 80px', gap: 10, alignItems: 'center', marginBottom: 10, fontSize: 10, color: '#6b6987', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               <span>Resource</span>
               <span>Before Optimization</span>
               <span>After Optimization</span>
@@ -154,21 +248,21 @@ export default function OptimizationResults() {
             {RESOURCE_UTIL.map(r => {
               const delta = r.after - r.before
               return (
-                <div key={r.name} style={{ display: 'grid', gridTemplateColumns: '140px 1fr 1fr 80px', gap: 10, alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
+                <div key={r.name} style={{ display: 'grid', gridTemplateColumns: '140px 1fr 1fr 80px', gap: 10, alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f4f2fc' }}>
                   <span style={{ fontSize: 13, fontWeight: 500 }}>{r.name}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ flex: 1, height: 8, background: '#e8e8e8', borderRadius: 4 }}>
-                      <div style={{ width: `${r.before}%`, height: '100%', background: r.before >= 100 ? '#b03030' : r.before > 80 ? '#c47a00' : '#aaa', borderRadius: 4 }} />
+                    <div style={{ flex: 1, height: 8, background: '#e4e2f7', borderRadius: 4 }}>
+                      <div style={{ width: `${r.before}%`, height: '100%', background: r.before >= 100 ? '#c4506a' : r.before > 80 ? '#a8691f' : '#aaa', borderRadius: 4 }} />
                     </div>
                     <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, width: 32, textAlign: 'right' }}>{r.before}%</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ flex: 1, height: 8, background: '#e8e8e8', borderRadius: 4 }}>
-                      <div style={{ width: `${r.after}%`, height: '100%', background: r.after >= 100 ? '#b03030' : r.after > 80 ? '#c47a00' : '#2d2d2d', borderRadius: 4 }} />
+                    <div style={{ flex: 1, height: 8, background: '#e4e2f7', borderRadius: 4 }}>
+                      <div style={{ width: `${r.after}%`, height: '100%', background: r.after >= 100 ? '#c4506a' : r.after > 80 ? '#a8691f' : '#4b4a9e', borderRadius: 4 }} />
                     </div>
                     <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, width: 32, textAlign: 'right' }}>{r.after}%</span>
                   </div>
-                  <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: delta < 0 ? '#3d7a3d' : delta > 0 ? '#c47a00' : '#737373', fontWeight: 600 }}>
+                  <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: delta < 0 ? '#3f8a6a' : delta > 0 ? '#a8691f' : '#6b6987', fontWeight: 600 }}>
                     {delta > 0 ? `+${delta}%` : delta < 0 ? `${delta}%` : '—'}
                   </span>
                 </div>
@@ -183,15 +277,16 @@ export default function OptimizationResults() {
         <button onClick={() => nav('constraints')} style={secondaryBtn}>← Adjust Constraints</button>
         <div className="flex items-center gap-10">
           {applied && (
-            <span style={{ fontSize: 13, color: '#3d7a3d', fontWeight: 500 }}>✓ Plan applied to project</span>
+            <span style={{ fontSize: 13, color: '#3f8a6a', fontWeight: 500 }}>✓ Plan applied to project</span>
           )}
           <button style={secondaryBtn}>Export PDF Report</button>
           <button style={secondaryBtn}>Export to MS Project</button>
           <button
             onClick={() => setApplied(true)}
-            style={{ ...primaryBtn, background: applied ? '#3d7a3d' : '#2d2d2d' }}
+            disabled={!isFeasible}
+            style={{ ...primaryBtn, background: applied ? '#3f8a6a' : isFeasible ? '#4b4a9e' : '#aaa', cursor: isFeasible ? 'pointer' : 'not-allowed' }}
           >
-            {applied ? '✓ Plan Applied' : 'Apply Optimized Plan'}
+            {applied ? '✓ Plan Applied' : isFeasible ? 'Apply Optimized Plan' : 'Cannot Apply Infeasible Plan'}
           </button>
         </div>
       </div>
@@ -201,17 +296,17 @@ export default function OptimizationResults() {
 
 function Breadcrumb({ steps }: { steps: string[] }) {
   return (
-    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#737373', marginBottom: 20, flexWrap: 'wrap' }}>
+    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20, flexWrap: 'wrap' }}>
       {steps.map((s, i) => (
         <span key={s} className="flex items-center gap-2">
           {i > 0 && <span>›</span>}
-          <span style={{ color: i === steps.length - 1 ? '#1a1a1a' : '#737373' }}>{s}</span>
+          <span style={{ color: i === steps.length - 1 ? '#23223a' : '#6b6987' }}>{s}</span>
         </span>
       ))}
     </div>
   )
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, padding: '18px 20px' }
-const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#2d2d2d', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
-const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#3a3a3a', border: '1px solid #d4d4d4', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
+const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '18px 20px' }
+const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
+const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#38375a', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, cursor: 'pointer' }

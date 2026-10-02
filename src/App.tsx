@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router'
 import { queryClient } from './lib/queryClient'
 import AuthProvider from './auth/AuthProvider'
 import { PublicOnly, RequireAuth } from './auth/guards'
@@ -28,6 +28,12 @@ function RootLayout() {
   )
 }
 
+/** `/register` is the design's sign-up URL; keep the query (e.g. `?next=`) when forwarding. */
+function RegisterRedirect() {
+  const { search } = useLocation()
+  return <Navigate to={{ pathname: '/signup', search }} replace />
+}
+
 function AppLayout() {
   return (
     <OrgProvider>
@@ -52,6 +58,7 @@ const router = createBrowserRouter([
           { path: 'forgot-password', element: <ForgotPassword /> },
         ],
       },
+      { path: 'register', element: <RegisterRedirect /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: 'auth/callback', element: <AuthCallback /> },
       {

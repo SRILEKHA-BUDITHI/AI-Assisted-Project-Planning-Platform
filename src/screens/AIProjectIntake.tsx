@@ -44,7 +44,7 @@ export default function AIProjectIntake() {
 
       <div style={{ marginBottom: 24 }}>
         <div style={{ fontSize: 22, fontWeight: 700 }}>AI Project Intake</div>
-        <div style={{ fontSize: 13, color: '#737373', marginTop: 2 }}>
+        <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
           Provide raw project notes, meeting transcripts, or documents. AI will extract structured project information.
         </div>
       </div>
@@ -60,14 +60,14 @@ export default function AIProjectIntake() {
                 width: '100%',
                 minHeight: 320,
                 padding: '12px 14px',
-                border: '1px solid #d4d4d4',
+                border: '1px solid #d9d6ee',
                 borderRadius: 4,
                 fontSize: 13,
                 lineHeight: 1.65,
                 fontFamily: 'inherit',
                 resize: 'vertical',
                 outline: 'none',
-                color: '#1a1a1a',
+                color: '#23223a',
               }}
               placeholder="Paste meeting notes, project description, brainstorming content, or any freeform project context here…"
             />
@@ -90,7 +90,7 @@ export default function AIProjectIntake() {
                   padding: '14px 10px',
                   border: '1px dashed #c8c8c8',
                   borderRadius: 6,
-                  background: '#fafafa',
+                  background: '#faf9fe',
                   cursor: 'pointer',
                   textAlign: 'center',
                   display: 'flex',
@@ -114,14 +114,14 @@ export default function AIProjectIntake() {
             <button onClick={() => navigate('/')} style={secondaryBtn}>← Back to Dashboard</button>
             <div className="flex items-center gap-10">
               {analyzed && (
-                <span style={{ fontSize: 13, color: '#3d7a3d', fontWeight: 500 }}>✓ Analysis complete — 6 sections extracted</span>
+                <span style={{ fontSize: 13, color: '#3f8a6a', fontWeight: 500 }}>✓ Analysis complete — 6 sections extracted</span>
               )}
               <button
                 onClick={handleAnalyze}
                 disabled={analyzing}
                 style={{
                   padding: '10px 28px',
-                  background: analyzing ? '#888' : '#2d2d2d',
+                  background: analyzing ? '#888' : '#4b4a9e',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 4,
@@ -133,7 +133,7 @@ export default function AIProjectIntake() {
                 {analyzing ? 'Analyzing…' : analyzed ? 'Re-Analyze' : 'Analyze Project'}
               </button>
               {analyzed && (
-                <button onClick={() => nav('scope')} style={{ ...primaryBtn, background: '#3d7a3d' }}>
+                <button onClick={() => nav('scope')} style={{ ...primaryBtn, background: '#3f8a6a' }}>
                   Continue to Scope Review →
                 </button>
               )}
@@ -147,15 +147,15 @@ export default function AIProjectIntake() {
             <div style={sectionLabel}>What AI Extracts</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
-                { tag: 'OBJ', label: 'Objectives', color: '#e8f0e8' },
-                { tag: 'REQ', label: 'Requirements', color: '#e8eaf0' },
-                { tag: 'DEL', label: 'Deliverables', color: '#f0ece8' },
-                { tag: 'CON', label: 'Constraints', color: '#f0e8e8' },
-                { tag: 'RSK', label: 'Risks', color: '#fdf2e8' },
-                { tag: 'UNK', label: 'Missing Info', color: '#f5f5f5' },
+                { tag: 'OBJ', label: 'Objectives', color: '#dcf3e8' },
+                { tag: 'REQ', label: 'Requirements', color: '#e1e8fb' },
+                { tag: 'DEL', label: 'Deliverables', color: '#fdeedd' },
+                { tag: 'CON', label: 'Constraints', color: '#fde8ee' },
+                { tag: 'RSK', label: 'Risks', color: '#fdeedd' },
+                { tag: 'UNK', label: 'Missing Info', color: '#f4f2fc' },
               ].map(e => (
                 <div key={e.tag} className="flex items-center gap-8" style={{ fontSize: 12 }}>
-                  <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, padding: '2px 6px', background: e.color, borderRadius: 3, color: '#555', width: 36, textAlign: 'center' }}>{e.tag}</span>
+                  <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 10, padding: '2px 6px', background: e.color, borderRadius: 3, color: '#5a5878', width: 36, textAlign: 'center' }}>{e.tag}</span>
                   <span>{e.label}</span>
                 </div>
               ))}
@@ -164,7 +164,7 @@ export default function AIProjectIntake() {
 
           <div style={cardStyle}>
             <div style={sectionLabel}>Tips for Better Results</div>
-            <ul style={{ fontSize: 12, color: '#555', lineHeight: 1.7, paddingLeft: 16, margin: 0 }}>
+            <ul style={{ fontSize: 12, color: '#5a5878', lineHeight: 1.7, paddingLeft: 16, margin: 0 }}>
               <li>Include stakeholder names and roles</li>
               <li>Mention budget figures explicitly</li>
               <li>Note hard deadlines vs. targets</li>
@@ -176,7 +176,7 @@ export default function AIProjectIntake() {
           <div style={cardStyle}>
             <div style={sectionLabel}>Previous Intakes</div>
             {['ERP Migration (Jan 8)', 'Portal Redesign (Dec 22)', 'Warehouse Build (Dec 10)'].map(prev => (
-              <div key={prev} style={{ fontSize: 12, color: '#555', padding: '6px 0', borderBottom: '1px solid #f0f0f0' }}>
+              <div key={prev} style={{ fontSize: 12, color: '#5a5878', padding: '6px 0', borderBottom: '1px solid #eeecf9' }}>
                 {prev}
               </div>
             ))}
@@ -189,18 +189,18 @@ export default function AIProjectIntake() {
 
 function Breadcrumb({ steps }: { steps: string[] }) {
   return (
-    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#737373', marginBottom: 20 }}>
+    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
       {steps.map((s, i) => (
         <span key={s} className="flex items-center gap-2">
           {i > 0 && <span>›</span>}
-          <span style={{ color: i === steps.length - 1 ? '#1a1a1a' : '#737373' }}>{s}</span>
+          <span style={{ color: i === steps.length - 1 ? '#23223a' : '#6b6987' }}>{s}</span>
         </span>
       ))}
     </div>
   )
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, padding: '18px 20px' }
-const sectionLabel: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: '#737373', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #f0f0f0' }
-const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#2d2d2d', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
-const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#3a3a3a', border: '1px solid #d4d4d4', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
+const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '18px 20px' }
+const sectionLabel: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: '#6b6987', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #eeecf9' }
+const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
+const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#38375a', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, cursor: 'pointer' }

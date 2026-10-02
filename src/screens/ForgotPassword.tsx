@@ -45,7 +45,7 @@ export default function ForgotPassword() {
       subtitle={
         sentTo
           ? undefined
-          : "Enter the email you use for ProjectAI and we'll send you a link to choose a new password."
+          : "Enter the email you use for NirnAIn and we'll send you a link to choose a new password."
       }
       footer={
         <Link to="/login" className={linkClass}>

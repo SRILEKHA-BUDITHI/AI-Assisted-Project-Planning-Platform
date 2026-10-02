@@ -62,7 +62,7 @@ export default function AuthCallback() {
       <Alert tone="error">{error}</Alert>
       <Link
         to="/login"
-        className="mt-6 flex w-full items-center justify-center rounded-[4px] bg-[#2d2d2d] px-4 py-[11px] text-sm font-semibold text-white hover:bg-[#1f1f1f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d]"
+        className="mt-6 flex w-full items-center justify-center rounded-[4px] bg-primary px-4 py-[11px] text-sm font-semibold text-white hover:bg-[#3d3c85] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         Back to sign in
       </Link>

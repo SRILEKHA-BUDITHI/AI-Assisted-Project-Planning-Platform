@@ -9,10 +9,15 @@ import { passwordMeetsPolicy } from '@/auth/password'
 import { Alert, Button, PasswordChecklist, PasswordField, TextField } from '@/components/ui'
 
 interface FieldErrors {
-  fullName?: string
+  firstName?: string
   email?: string
   password?: string
   confirm?: string
+}
+
+const PANEL = {
+  heading: 'Create your planning workspace',
+  text: 'Bring in meetings, documents and requirements. NirnAIn structures them into a plan you can review, optimize and approve.',
 }
 
 export default function Signup() {
@@ -20,7 +25,8 @@ export default function Signup() {
   const [params] = useSearchParams()
   const next = safeNext(params.get('next'))
 
-  const [fullName, setFullName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -29,7 +35,7 @@ export default function Signup() {
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const refs = {
-    fullName: useRef<HTMLInputElement>(null),
+    firstName: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
     password: useRef<HTMLInputElement>(null),
     confirm: useRef<HTMLInputElement>(null),
@@ -40,7 +46,7 @@ export default function Signup() {
 
   function validate(): FieldErrors {
     const errors: FieldErrors = {}
-    if (!fullName.trim()) errors.fullName = 'Enter your full name.'
+    if (!firstName.trim()) errors.firstName = 'Enter your first name.'
     const trimmed = email.trim()
     if (!trimmed) errors.email = 'Enter your work email.'
     else if (!/^\S+@\S+\.\S+$/.test(trimmed)) errors.email = 'Enter a valid email address.'
@@ -60,10 +66,11 @@ export default function Signup() {
     setSubmitting(true)
     setError(null)
     const trimmedEmail = email.trim()
+    const fullName = [firstName.trim(), lastName.trim()].filter(Boolean).join(' ')
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: trimmedEmail,
       password,
-      options: { data: { full_name: fullName.trim() }, emailRedirectTo: authRedirectUrl() },
+      options: { data: { full_name: fullName }, emailRedirectTo: authRedirectUrl() },
     })
     if (signUpError) {
       setError(friendlyAuthError(signUpError).message)
@@ -77,8 +84,9 @@ export default function Signup() {
 
   return (
     <AuthLayout
-      title="Create your account"
-      subtitle="Start planning projects with AI in minutes."
+      title="Create account"
+      subtitle="Start planning in minutes"
+      panel={PANEL}
       footer={
         <>
           Already have an account?{' '}
@@ -103,18 +111,31 @@ export default function Signup() {
       <Divider label="or sign up with email" />
 
       <form onSubmit={onSubmit} noValidate>
-        <TextField
-          ref={refs.fullName}
-          label="Full name"
-          name="name"
-          autoComplete="name"
-          placeholder="Alex Morgan"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          error={fieldErrors.fullName}
-          readOnly={busy}
-          required
-        />
+        <div className="flex gap-3">
+          <TextField
+            ref={refs.firstName}
+            className="min-w-0 flex-1"
+            label="First name"
+            name="given-name"
+            autoComplete="given-name"
+            placeholder="Alex"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            error={fieldErrors.firstName}
+            readOnly={busy}
+            required
+          />
+          <TextField
+            className="min-w-0 flex-1"
+            label="Last name"
+            name="family-name"
+            autoComplete="family-name"
+            placeholder="Morgan"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            readOnly={busy}
+          />
+        </div>
         <TextField
           ref={refs.email}
           label="Work email"
@@ -157,7 +178,7 @@ export default function Signup() {
         <Button type="submit" size="lg" block loading={submitting} disabled={oauthPending} className="mt-2">
           Create account
         </Button>
-        <p className="mt-4 text-center text-xs leading-5 text-[#8a8a8a]">
+        <p className="mt-4 text-center text-xs leading-5 text-[#7d7a99]">
           By creating an account you agree to your organization&apos;s acceptable use policy.
         </p>
       </form>

@@ -53,7 +53,7 @@ export default function CheckEmail() {
       subtitle={
         email ? (
           <>
-            We sent a confirmation link to <span className="font-semibold text-[#1a1a1a]">{email}</span>. Open it on
+            We sent a confirmation link to <span className="font-semibold text-foreground">{email}</span>. Open it on
             this device to activate your account.
           </>
         ) : (
@@ -66,14 +66,14 @@ export default function CheckEmail() {
         </Link>
       }
     >
-      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#ececec] text-[#2d2d2d]">
+      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-muted text-primary">
         <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="5" width="18" height="14" rx="2" />
           <path d="M3.5 6.5l8.5 6 8.5-6" />
         </svg>
       </div>
 
-      <ul className="mb-6 space-y-2 text-[13px] leading-5 text-[#555]">
+      <ul className="mb-6 space-y-2 text-[13px] leading-5 text-[#5a5878]">
         <li>• The link expires after 24 hours.</li>
         <li>• Can&apos;t find it? Check your spam or promotions folder.</li>
       </ul>

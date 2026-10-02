@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
+import { APP_NAME, BrandMark, BrandName } from '@/components/Brand'
 
 const FEATURES = [
   'AI extracts scope from briefs, transcripts and RFPs',
@@ -6,16 +7,9 @@ const FEATURES = [
   'Optimized schedules and resource allocation',
 ]
 
-export function BrandMark({ size = 32 }: { size?: number }) {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex shrink-0 items-center justify-center rounded-[4px] bg-[#555] font-bold text-white"
-      style={{ width: size, height: size, fontSize: size * 0.43 }}
-    >
-      AI
-    </div>
-  )
+const DEFAULT_PANEL = {
+  heading: 'AI-Assisted Project Planning Platform',
+  text: 'Plan projects intelligently. AI extracts scope, builds WBS structures, and optimizes resource allocation automatically.',
 }
 
 export default function AuthLayout({
@@ -23,20 +17,23 @@ export default function AuthLayout({
   subtitle,
   children,
   footer,
+  panel = DEFAULT_PANEL,
 }: {
   title: string
   subtitle?: ReactNode
   children: ReactNode
   footer?: ReactNode
+  /** Copy for the brand panel shown on wide screens. */
+  panel?: { heading: string; text: string }
 }) {
   useEffect(() => {
-    document.title = `${title} · ProjectAI`
+    document.title = `${title} · ${APP_NAME}`
   }, [title])
 
   return (
-    <div className="flex min-h-screen bg-[#f7f7f7]">
+    <div className="flex min-h-screen bg-background">
       {/* Brand panel */}
-      <aside className="relative hidden w-[420px] shrink-0 flex-col justify-between overflow-hidden bg-[#2d2d2d] px-12 py-12 text-white lg:flex">
+      <aside className="relative hidden w-[420px] shrink-0 flex-col justify-between overflow-hidden bg-primary px-12 py-12 text-primary-foreground lg:flex">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.07]"
@@ -48,20 +45,17 @@ export default function AuthLayout({
           }}
         />
         <div className="relative">
-          <div className="mb-12 flex items-center gap-2">
-            <BrandMark />
-            <span className="text-base font-semibold">ProjectAI</span>
+          <div className="mb-12 flex items-center gap-2.5">
+            <BrandMark inverted />
+            <BrandName inverted className="text-base" />
           </div>
-          <h2 className="mb-4 text-[28px] font-bold leading-[1.3]">AI-Assisted Project Planning Platform</h2>
-          <p className="text-sm leading-[1.7] text-[#a3a3a3]">
-            Plan projects intelligently. AI extracts scope, builds WBS structures, and optimizes resource allocation
-            automatically.
-          </p>
+          <h2 className="mb-4 text-[28px] font-bold leading-[1.3]">{panel.heading}</h2>
+          <p className="text-sm leading-[1.7] text-[#d9d6ee]">{panel.text}</p>
           <ul className="mt-10 space-y-3.5">
             {FEATURES.map((feature) => (
-              <li key={feature} className="flex items-start gap-3 text-[13px] leading-5 text-[#d4d4d4]">
-                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#444]">
-                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <li key={feature} className="flex items-start gap-3 text-[13px] leading-5 text-[#e4e2f7]">
+                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#dcf3e8]">
+                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3f8a6a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
                   </svg>
                 </span>
@@ -70,7 +64,9 @@ export default function AuthLayout({
             ))}
           </ul>
         </div>
-        <div className="relative text-xs text-[#777]">© {new Date().getFullYear()} ProjectAI Inc.</div>
+        <div className="relative text-xs text-[#c9c6ee]">
+          © {new Date().getFullYear()} {APP_NAME} Inc.
+        </div>
       </aside>
 
       {/* Content */}
@@ -78,14 +74,14 @@ export default function AuthLayout({
         <div className="w-full max-w-[380px]">
           <div className="mb-10 flex items-center gap-2 lg:hidden">
             <BrandMark size={28} />
-            <span className="text-[15px] font-semibold">ProjectAI</span>
+            <BrandName className="text-[15px]" />
           </div>
           <div className="mb-8">
-            <h1 className="mb-1.5 text-[22px] font-bold text-[#1a1a1a]">{title}</h1>
-            {subtitle && <div className="text-sm leading-6 text-[#737373]">{subtitle}</div>}
+            <h1 className="mb-1.5 text-[22px] font-bold text-foreground">{title}</h1>
+            {subtitle && <div className="text-sm leading-6 text-muted-foreground">{subtitle}</div>}
           </div>
           {children}
-          {footer && <div className="mt-8 text-center text-[13px] text-[#737373]">{footer}</div>}
+          {footer && <div className="mt-8 text-center text-[13px] text-muted-foreground">{footer}</div>}
         </div>
       </main>
     </div>
@@ -93,4 +89,4 @@ export default function AuthLayout({
 }
 
 export const linkClass =
-  'font-medium text-[#2d2d2d] underline decoration-[#bdbdbd] underline-offset-2 hover:decoration-[#2d2d2d] rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d]'
+  'font-medium text-primary underline decoration-[#b5b1dc] underline-offset-2 hover:decoration-primary rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'

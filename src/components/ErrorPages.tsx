@@ -1,10 +1,11 @@
 import { Component, useEffect, type ErrorInfo, type ReactNode } from 'react'
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router'
+import { APP_NAME } from './Brand'
 
 const primaryLinkClass =
-  'inline-flex items-center justify-center rounded-[4px] bg-[#2d2d2d] px-5 py-[9px] text-[13px] font-semibold text-white hover:bg-[#1f1f1f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d]'
+  'inline-flex items-center justify-center rounded-[4px] bg-primary px-5 py-[9px] text-[13px] font-semibold text-white hover:bg-[#3d3c85] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
 const secondaryButtonClass =
-  'inline-flex items-center justify-center rounded-[4px] border border-[#d4d4d4] bg-white px-5 py-[9px] text-[13px] font-medium text-[#2d2d2d] hover:bg-[#fafafa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d] cursor-pointer'
+  'inline-flex items-center justify-center rounded-[4px] border border-border bg-white px-5 py-[9px] text-[13px] font-medium text-primary hover:bg-[#faf9fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer'
 
 /** Presentational full-page message. Uses plain anchors when rendered outside the router. */
 export function MessagePage({
@@ -21,11 +22,11 @@ export function MessagePage({
   inline?: boolean
 }) {
   return (
-    <div className={inline ? 'flex min-h-[60vh] items-center justify-center px-6 py-16' : 'flex min-h-screen items-center justify-center bg-[#f7f7f7] px-6 py-16'}>
+    <div className={inline ? 'flex min-h-[60vh] items-center justify-center px-6 py-16' : 'flex min-h-screen items-center justify-center bg-background px-6 py-16'}>
       <div className="max-w-md text-center">
-        {code && <div className="mono mb-3 text-xs tracking-[0.2em] text-[#999]">{code}</div>}
-        <h1 className="text-[22px] font-bold text-[#1a1a1a]">{title}</h1>
-        <div className="mt-2 text-sm leading-6 text-[#737373]">{message}</div>
+        {code && <div className="mono mb-3 text-xs tracking-[0.2em] text-[#7d7a99]">{code}</div>}
+        <h1 className="text-[22px] font-bold text-foreground">{title}</h1>
+        <div className="mt-2 text-sm leading-6 text-muted-foreground">{message}</div>
         {actions && <div className="mt-7 flex justify-center gap-3">{actions}</div>}
       </div>
     </div>
@@ -34,7 +35,7 @@ export function MessagePage({
 
 export function NotFound({ inline = false }: { inline?: boolean }) {
   useEffect(() => {
-    document.title = 'Page not found · ProjectAI'
+    document.title = `Page not found · ${APP_NAME}`
   }, [])
   return (
     <MessagePage
@@ -103,18 +104,18 @@ export class AppErrorBoundary extends Component<{ children: ReactNode }, { hasEr
 export function ConfigErrorPage({ problems }: { problems: { name: string; message: string }[] }) {
   return (
     <MessagePage
-      title="ProjectAI isn't configured"
+      title={`${APP_NAME} isn't configured`}
       message={
         <>
           <p>This build is missing required configuration. Set the following variables and rebuild:</p>
-          <ul className="mt-4 space-y-1.5 rounded-md border border-[#e8e8e8] bg-white px-4 py-3 text-left">
+          <ul className="mt-4 space-y-1.5 rounded-md border border-[#e4e2f7] bg-white px-4 py-3 text-left">
             {problems.map((p) => (
               <li key={p.name} className="text-[13px]">
-                <code className="mono font-medium text-[#1a1a1a]">{p.name}</code> <span>{p.message}</span>
+                <code className="mono font-medium text-foreground">{p.name}</code> <span>{p.message}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs text-[#999]">See .env.example in the repository for the full list.</p>
+          <p className="mt-4 text-xs text-[#7d7a99]">See .env.example in the repository for the full list.</p>
         </>
       }
     />

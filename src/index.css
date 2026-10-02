@@ -22,21 +22,21 @@
 }
 
 :root {
-  --background: #f7f7f7;
-  --foreground: #1a1a1a;
+  --background: #f6f5fd;
+  --foreground: #23223a;
   --card: #ffffff;
-  --card-foreground: #1a1a1a;
-  --primary: #2d2d2d;
+  --card-foreground: #23223a;
+  --primary: #4b4a9e;
   --primary-foreground: #ffffff;
-  --secondary: #e8e8e8;
-  --secondary-foreground: #3a3a3a;
-  --muted: #f0f0f0;
-  --muted-foreground: #737373;
-  --accent: #4a4a4a;
-  --accent-foreground: #ffffff;
-  --border: #d4d4d4;
-  --ring: #2d2d2d;
-  --radius: 4px;
+  --secondary: #e4e2f7;
+  --secondary-foreground: #38375a;
+  --muted: #eeecf9;
+  --muted-foreground: #6b6987;
+  --accent: #dcf3e8;
+  --accent-foreground: #23223a;
+  --border: #d9d6ee;
+  --ring: #4b4a9e;
+  --radius: 8px;
 }
 
 * {
@@ -56,8 +56,8 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #aaa; }
+::-webkit-scrollbar-thumb { background: #d9d6ee; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #b5b1dc; }
 
 .mono { font-family: 'DM Mono', monospace; }
 

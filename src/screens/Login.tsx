@@ -65,7 +65,7 @@ export default function Login() {
       subtitle="Access your project workspace"
       footer={
         <>
-          New to ProjectAI?{' '}
+          New to NirnAIn?{' '}
           <Link to={`/signup${nextQuery}`} className={linkClass}>
             Create an account
           </Link>
