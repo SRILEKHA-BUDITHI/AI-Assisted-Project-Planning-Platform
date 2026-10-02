@@ -33,8 +33,8 @@ export function Spinner({ size = 16, className }: { size?: number; className?: s
 
 export function FullPageSpinner({ label = 'Loading' }: { label?: string }) {
   return (
-    <div role="status" aria-live="polite" className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#f7f7f7] text-[#737373]">
-      <Spinner size={22} className="text-[#2d2d2d]" />
+    <div role="status" aria-live="polite" className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background text-muted-foreground">
+      <Spinner size={22} className="text-primary" />
       <span className="text-[13px]">{label}…</span>
     </div>
   )
@@ -45,9 +45,9 @@ export function FullPageSpinner({ label = 'Loading' }: { label?: string }) {
 type ButtonVariant = 'primary' | 'secondary' | 'ghost'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-[#2d2d2d] text-white border border-[#2d2d2d] hover:bg-[#1f1f1f] disabled:bg-[#6b6b6b] disabled:border-[#6b6b6b]',
-  secondary: 'bg-white text-[#2d2d2d] border border-[#d4d4d4] hover:bg-[#fafafa] hover:border-[#bdbdbd] disabled:text-[#9a9a9a]',
-  ghost: 'bg-transparent text-[#2d2d2d] border border-transparent hover:bg-[#f0f0f0] disabled:text-[#9a9a9a]',
+  primary: 'bg-primary text-white border border-primary hover:bg-[#3d3c85] disabled:bg-[#9594c4] disabled:border-[#9594c4]',
+  secondary: 'bg-white text-primary border border-border hover:bg-[#faf9fe] hover:border-[#b5b1dc] disabled:text-[#9b98b5]',
+  ghost: 'bg-transparent text-primary border border-transparent hover:bg-muted disabled:text-[#9b98b5]',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -76,7 +76,7 @@ export function Button({
       aria-busy={loading || undefined}
       className={cx(
         'relative inline-flex items-center justify-center gap-2 rounded-[4px] font-semibold transition-colors',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d2d2d]',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
         'disabled:cursor-not-allowed cursor-pointer',
         BUTTON_VARIANTS[variant],
         sizes[size],
@@ -101,10 +101,10 @@ export function Button({
 type AlertTone = 'error' | 'success' | 'info' | 'warning'
 
 const ALERT_TONES: Record<AlertTone, string> = {
-  error: 'border-[#f1c9c9] bg-[#fdf3f3] text-[#8f2424]',
-  success: 'border-[#c8e0c8] bg-[#f2f8f2] text-[#2f5f2f]',
-  info: 'border-[#d4d4d4] bg-[#f7f7f7] text-[#3a3a3a]',
-  warning: 'border-[#f0dcb0] bg-[#fdf8ec] text-[#7a4d00]',
+  error: 'border-[#f1c6d2] bg-[#fde8ee] text-[#9c3a52]',
+  success: 'border-[#b9e3cf] bg-[#eef8f3] text-[#2f6b52]',
+  info: 'border-border bg-background text-secondary-foreground',
+  warning: 'border-[#f1d9b8] bg-[#fdf3e7] text-[#8a5518]',
 }
 
 export function Alert({
@@ -176,11 +176,11 @@ function AlertIcon({ tone }: { tone: AlertTone }) {
 /* ─────────────────────────── Form fields ─────────────────────────── */
 
 export const inputClass = cx(
-  'w-full rounded-[4px] border border-[#d4d4d4] bg-white px-3 py-[9px] text-sm text-[#1a1a1a]',
-  'placeholder:text-[#a3a3a3] outline-none transition-[border-color,box-shadow]',
-  'focus:border-[#2d2d2d] focus:shadow-[0_0_0_3px_rgba(45,45,45,0.12)]',
-  'aria-[invalid=true]:border-[#b03030] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(176,48,48,0.14)]',
-  'disabled:bg-[#f7f7f7] disabled:text-[#8a8a8a]',
+  'w-full rounded-[4px] border border-border bg-white px-3 py-[9px] text-sm text-foreground',
+  'placeholder:text-[#9b98b5] outline-none transition-[border-color,box-shadow]',
+  'focus:border-primary focus:shadow-[0_0_0_3px_rgba(75,74,158,0.16)]',
+  'aria-[invalid=true]:border-[#c4506a] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(196,80,106,0.16)]',
+  'disabled:bg-background disabled:text-[#7d7a99]',
 )
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -200,7 +200,7 @@ export function TextField({ label, error, hint, labelAside, trailing, id, classN
   return (
     <div className={cx('mb-4', className)}>
       <div className="mb-1.5 flex items-baseline justify-between">
-        <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-[0.05em] text-[#3a3a3a]">
+        <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-[0.05em] text-secondary-foreground">
           {label}
         </label>
         {labelAside}
@@ -216,12 +216,12 @@ export function TextField({ label, error, hint, labelAside, trailing, id, classN
         {trailing && <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">{trailing}</div>}
       </div>
       {error && (
-        <p id={errorId} className="mt-1.5 text-xs text-[#b03030]">
+        <p id={errorId} className="mt-1.5 text-xs text-[#c4506a]">
           {error}
         </p>
       )}
       {hint && (
-        <div id={hintId} className="mt-1.5 text-xs text-[#737373]">
+        <div id={hintId} className="mt-1.5 text-xs text-muted-foreground">
           {hint}
         </div>
       )}
@@ -243,7 +243,7 @@ export function PasswordField(props: Omit<TextFieldProps, 'type' | 'trailing'>) 
           onClick={() => setVisible((v) => !v)}
           aria-label={visible ? 'Hide password' : 'Show password'}
           aria-pressed={visible}
-          className="rounded-[3px] p-1.5 text-[#737373] hover:text-[#2d2d2d] focus-visible:outline-2 focus-visible:outline-[#2d2d2d] cursor-pointer"
+          className="rounded-[3px] p-1.5 text-muted-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-primary cursor-pointer"
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}
         </button>
@@ -278,7 +278,7 @@ export function PasswordChecklist({ password, id }: { password: string; id?: str
       {PASSWORD_RULES.map((rule) => {
         const met = rule.test(password)
         return (
-          <li key={rule.id} className={cx('flex items-center gap-1.5 text-xs transition-colors', met ? 'text-[#3d7a3d]' : 'text-[#8a8a8a]')}>
+          <li key={rule.id} className={cx('flex items-center gap-1.5 text-xs transition-colors', met ? 'text-[#3f8a6a]' : 'text-[#7d7a99]')}>
             <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               {met ? <path d="M5 12.5l4.5 4.5L19 7.5" /> : <circle cx="12" cy="12" r="3.5" />}
             </svg>
@@ -296,7 +296,7 @@ export function PasswordChecklist({ password, id }: { password: string; id?: str
 /* ─────────────────────────── Data states ─────────────────────────── */
 
 export function Skeleton({ className, style }: { className?: string; style?: CSSProperties }) {
-  return <div aria-hidden="true" className={cx('animate-pulse rounded-[4px] bg-[#ececec]', className)} style={style} />
+  return <div aria-hidden="true" className={cx('animate-pulse rounded-[4px] bg-muted', className)} style={style} />
 }
 
 export function ErrorState({
@@ -314,14 +314,14 @@ export function ErrorState({
 }) {
   return (
     <div role="alert" className={cx('flex flex-col items-center text-center', compact ? 'py-6' : 'py-12')}>
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#fdf3f3] text-[#b03030]">
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#fde8ee] text-[#c4506a]">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 8v5M12 16h.01" />
           <circle cx="12" cy="12" r="9" />
         </svg>
       </div>
-      <div className="text-sm font-semibold text-[#1a1a1a]">{title}</div>
-      <div className="mt-1 max-w-sm text-[13px] text-[#737373]">{message}</div>
+      <div className="text-sm font-semibold text-foreground">{title}</div>
+      <div className="mt-1 max-w-sm text-[13px] text-muted-foreground">{message}</div>
       {onRetry && (
         <Button variant="secondary" size="sm" className="mt-4" onClick={onRetry} loading={retrying}>
           Try again

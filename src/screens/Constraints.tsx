@@ -35,8 +35,8 @@ export default function Constraints() {
 
       <div style={{ marginBottom: 24 }}>
         <div style={{ fontSize: 22, fontWeight: 700 }}>Constraints</div>
-        <div style={{ fontSize: 13, color: '#737373', marginTop: 2 }}>
-          Define hard and soft constraints. These parameters drive Gurobi optimization.
+        <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
+          Define hard and soft constraints. These parameters drive OR-Tools optimization.
         </div>
       </div>
 
@@ -47,30 +47,30 @@ export default function Constraints() {
           <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Total Budget">
               <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: 8, color: '#737373', fontSize: 13 }}>$</span>
+                <span style={{ position: 'absolute', left: 10, top: 8, color: '#6b6987', fontSize: 13 }}>$</span>
                 <input defaultValue="375,000" style={{ ...inputStyle, paddingLeft: 20 }} />
               </div>
             </Field>
             <Field label="Contingency Reserve">
               <div style={{ position: 'relative' }}>
                 <input defaultValue="0" style={{ ...inputStyle, paddingRight: 28 }} />
-                <span style={{ position: 'absolute', right: 10, top: 8, color: '#737373', fontSize: 13 }}>%</span>
+                <span style={{ position: 'absolute', right: 10, top: 8, color: '#6b6987', fontSize: 13 }}>%</span>
               </div>
             </Field>
             <Field label="Labor Cost Cap">
               <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: 8, color: '#737373', fontSize: 13 }}>$</span>
+                <span style={{ position: 'absolute', left: 10, top: 8, color: '#6b6987', fontSize: 13 }}>$</span>
                 <input defaultValue="280,000" style={{ ...inputStyle, paddingLeft: 20 }} />
               </div>
             </Field>
             <Field label="Infrastructure Cap">
               <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: 8, color: '#737373', fontSize: 13 }}>$</span>
+                <span style={{ position: 'absolute', left: 10, top: 8, color: '#6b6987', fontSize: 13 }}>$</span>
                 <input defaultValue="95,000" style={{ ...inputStyle, paddingLeft: 20 }} />
               </div>
             </Field>
           </div>
-          <div style={{ marginTop: 10, padding: '8px 10px', background: '#fdf2e8', borderRadius: 4, fontSize: 12, color: '#c47a00' }}>
+          <div style={{ marginTop: 10, padding: '8px 10px', background: '#fdeedd', borderRadius: 4, fontSize: 12, color: '#a8691f' }}>
             ⚠ No contingency buffer approved — optimization will flag budget risk.
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function Constraints() {
           <SectionHeader label="Employee Capacity" badge={capacityType} onToggle={() => setCapacityType(t => t === 'hard' ? 'soft' : 'hard')} />
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #e8e8e8' }}>
+              <tr style={{ borderBottom: '1px solid #e4e2f7' }}>
                 {['Name', 'Role', 'Avail. (hrs/wk)', 'Allocated', 'Utilization'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', padding: '5px 8px', fontSize: 10, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                  <th key={h} style={{ textAlign: 'left', padding: '5px 8px', fontSize: 10, color: '#6b6987', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -116,17 +116,17 @@ export default function Constraints() {
               {EMPLOYEES.map(e => {
                 const util = Math.round((e.allocated / e.available) * 100)
                 return (
-                  <tr key={e.name} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                  <tr key={e.name} style={{ borderBottom: '1px solid #f4f2fc' }}>
                     <td style={{ padding: '8px 8px', fontWeight: 500 }}>{e.name}</td>
-                    <td style={{ padding: '8px 8px', color: '#737373' }}>{e.role}</td>
+                    <td style={{ padding: '8px 8px', color: '#6b6987' }}>{e.role}</td>
                     <td style={{ padding: '8px 8px', fontFamily: 'DM Mono, monospace' }}>{e.available}h</td>
                     <td style={{ padding: '8px 8px', fontFamily: 'DM Mono, monospace' }}>{e.allocated}h</td>
                     <td style={{ padding: '8px 8px' }}>
                       <div className="flex items-center gap-6">
-                        <div style={{ width: 56, height: 5, background: '#e8e8e8', borderRadius: 3 }}>
-                          <div style={{ width: `${util}%`, height: '100%', background: util >= 100 ? '#b03030' : util > 80 ? '#c47a00' : '#2d2d2d', borderRadius: 3 }} />
+                        <div style={{ width: 56, height: 5, background: '#e4e2f7', borderRadius: 3 }}>
+                          <div style={{ width: `${util}%`, height: '100%', background: util >= 100 ? '#c4506a' : util > 80 ? '#a8691f' : '#4b4a9e', borderRadius: 3 }} />
                         </div>
-                        <span style={{ fontSize: 11, color: util >= 100 ? '#b03030' : '#555', fontWeight: util >= 100 ? 600 : 400 }}>{util}%</span>
+                        <span style={{ fontSize: 11, color: util >= 100 ? '#c4506a' : '#5a5878', fontWeight: util >= 100 ? 600 : 400 }}>{util}%</span>
                       </div>
                     </td>
                   </tr>
@@ -151,17 +151,17 @@ export default function Constraints() {
               <div key={s.skill} className="flex items-center justify-between" style={{ fontSize: 12 }}>
                 <span>{s.skill}</span>
                 <div className="flex items-center gap-8">
-                  <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: s.required ? '#f0e8e8' : '#f5f5f5', color: s.required ? '#b03030' : '#737373' }}>
+                  <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: s.required ? '#fde8ee' : '#f4f2fc', color: s.required ? '#c4506a' : '#6b6987' }}>
                     {s.required ? 'Required' : 'Optional'}
                   </span>
-                  <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: s.available ? '#e8f0e8' : '#fef2f2', color: s.available ? '#3d7a3d' : '#b03030' }}>
+                  <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: s.available ? '#dcf3e8' : '#fde8ee', color: s.available ? '#3f8a6a' : '#c4506a' }}>
                     {s.available ? '✓ Covered' : '✗ Gap'}
                   </span>
                 </div>
               </div>
             ))}
           </div>
-          <div style={{ padding: '8px 10px', background: '#fef2f2', borderRadius: 4, fontSize: 12, color: '#b03030' }}>
+          <div style={{ padding: '8px 10px', background: '#fde8ee', borderRadius: 4, fontSize: 12, color: '#c4506a' }}>
             ⚠ SAP Integration skill gap detected. Consider contracting or training.
           </div>
         </div>
@@ -171,23 +171,23 @@ export default function Constraints() {
           <SectionHeader label="Task Dependencies" badge="hard" onToggle={() => {}} />
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #e8e8e8' }}>
+              <tr style={{ borderBottom: '1px solid #e4e2f7' }}>
                 {['Predecessor', 'Successor', 'Dependency Type', 'Actions'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', padding: '6px 10px', fontSize: 10, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                  <th key={h} style={{ textAlign: 'left', padding: '6px 10px', fontSize: 10, color: '#6b6987', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {DEPS.map((d, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                <tr key={i} style={{ borderBottom: '1px solid #f4f2fc' }}>
                   <td style={{ padding: '8px 10px', fontFamily: 'DM Mono, monospace', fontSize: 12 }}>{d.from}</td>
                   <td style={{ padding: '8px 10px', fontFamily: 'DM Mono, monospace', fontSize: 12 }}>{d.to}</td>
                   <td style={{ padding: '8px 10px' }}>
-                    <span style={{ fontSize: 11, padding: '2px 8px', background: '#e8eaf0', borderRadius: 10, color: '#555' }}>{d.type}</span>
+                    <span style={{ fontSize: 11, padding: '2px 8px', background: '#e1e8fb', borderRadius: 10, color: '#5a5878' }}>{d.type}</span>
                   </td>
                   <td style={{ padding: '8px 10px' }}>
-                    <button style={{ fontSize: 11, color: '#555', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 8px', background: '#fafafa', cursor: 'pointer', marginRight: 6 }}>Edit</button>
-                    <button style={{ fontSize: 11, color: '#b03030', border: '1px solid #f0d4d4', borderRadius: 3, padding: '2px 8px', background: '#fef5f5', cursor: 'pointer' }}>Remove</button>
+                    <button style={{ fontSize: 11, color: '#5a5878', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 8px', background: '#faf9fe', cursor: 'pointer', marginRight: 6 }}>Edit</button>
+                    <button style={{ fontSize: 11, color: '#c4506a', border: '1px solid #f0d4d4', borderRadius: 3, padding: '2px 8px', background: '#fde8ee', cursor: 'pointer' }}>Remove</button>
                   </td>
                 </tr>
               ))}
@@ -199,7 +199,7 @@ export default function Constraints() {
 
       <div className="flex justify-between" style={{ marginTop: 24 }}>
         <button onClick={() => nav('wbs')} style={secondaryBtn}>← Back to WBS Builder</button>
-        <button onClick={() => nav('optimization')} style={primaryBtn}>Run Gurobi Optimization →</button>
+        <button onClick={() => nav('optimization')} style={primaryBtn}>Run Optimization →</button>
       </div>
     </div>
   )
@@ -207,15 +207,15 @@ export default function Constraints() {
 
 function SectionHeader({ label, badge, onToggle }: { label: string; badge: string; onToggle: () => void }) {
   return (
-    <div className="flex items-center justify-between" style={{ marginBottom: 14, paddingBottom: 10, borderBottom: '1px solid #f0f0f0' }}>
+    <div className="flex items-center justify-between" style={{ marginBottom: 14, paddingBottom: 10, borderBottom: '1px solid #eeecf9' }}>
       <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
       <button
         onClick={onToggle}
         style={{
           fontSize: 11,
           padding: '3px 10px',
-          background: badge === 'hard' ? '#f0e8e8' : '#e8eaf0',
-          color: badge === 'hard' ? '#b03030' : '#4455aa',
+          background: badge === 'hard' ? '#fde8ee' : '#e1e8fb',
+          color: badge === 'hard' ? '#c4506a' : '#4455aa',
           border: 'none',
           borderRadius: 10,
           cursor: 'pointer',
@@ -231,7 +231,7 @@ function SectionHeader({ label, badge, onToggle }: { label: string; badge: strin
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 5, color: '#555', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</label>
+      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, marginBottom: 5, color: '#5a5878', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</label>
       {children}
     </div>
   )
@@ -239,18 +239,18 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function Breadcrumb({ steps }: { steps: string[] }) {
   return (
-    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#737373', marginBottom: 20 }}>
+    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
       {steps.map((s, i) => (
         <span key={s} className="flex items-center gap-2">
           {i > 0 && <span>›</span>}
-          <span style={{ color: i === steps.length - 1 ? '#1a1a1a' : '#737373' }}>{s}</span>
+          <span style={{ color: i === steps.length - 1 ? '#23223a' : '#6b6987' }}>{s}</span>
         </span>
       ))}
     </div>
   )
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, padding: '18px 20px' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 10px', border: '1px solid #d4d4d4', borderRadius: 4, fontSize: 13, background: '#fff', color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }
-const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#2d2d2d', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
-const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#3a3a3a', border: '1px solid #d4d4d4', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
+const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '18px 20px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 10px', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, background: '#fff', color: '#23223a', outline: 'none', fontFamily: 'inherit' }
+const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
+const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#38375a', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
