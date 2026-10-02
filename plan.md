@@ -569,13 +569,18 @@ Audio STT intake · OCR for scanned PDFs · real-time collaboration on the WBS �
 |---|------|--------|
 | 1 | Foundation: DB schema + RLS, FastAPI, Supabase Auth UI, CI/CD | ✅ Done (branch `feat/foundation`) |
 | 2 | Railway project `projectai`: services `web` + `api`, domains, base variables | ✅ Done |
-| 3 | Supabase production project, migrations pushed, keys wired into Railway + GitHub secrets | ⏳ Waiting on `supabase login` |
-| 4 | Push branch, PR, CI green, connect Railway services to GitHub (`main`, Wait for CI), first deploy | ⏳ Waiting on `gh auth login` |
+| 3 | Supabase production project `projectai-prod` (us-east-1), 5 migrations live, keys wired into Railway + GitHub | ✅ Done |
+| 4 | PRs #1–#3 merged; CI green; migrations auto-pushed on `main`; web + api live; `main` protected (PR + 4 checks, squash-only) | ✅ Done |
+| 4a | **Install the Railway GitHub App** on the repo, re-link both services, enable "Wait for CI". Until then, Railway does not redeploy on push. | ⚠️ Blocked on owner |
 | 5 | **Cloudflare: Pages for the frontend + custom domain DNS** | 📝 Next task: plan first, then execute |
-| 6 | Google + Microsoft OAuth apps, custom SMTP (Resend) for auth emails | Planned |
+| 6 | **Custom SMTP (Resend) for auth emails.** Required before real users: Supabase's default mailer only sends to project team members, a few emails per hour | Planned, high priority |
+| 6b | Google + Microsoft OAuth apps | Planned |
+| 6c | Raise required PR approvals to 1 + enable code-owner review once teammates are added to CODEOWNERS | Planned |
 | 7 | AI intake, WBS, OR-Tools optimizer (Phases 2–5 of §11) | Planned |
 
 ### Current Railway resources
 - Project: `projectai` (id `cef0a0bb-18d6-4638-a6c8-56e9d62c4d52`), environment `production`
 - `web` → https://web-production-e916f.up.railway.app
 - `api` → https://api-production-c6141.up.railway.app
+- Both services in `us-east4-eqdc4a` (Virginia), same region as Supabase
+- Supabase: org `ProjectAI`, project ref `owiefydmdbzwrhltjfqg`; DB password in git-ignored `supabase/.env` + GitHub secret
