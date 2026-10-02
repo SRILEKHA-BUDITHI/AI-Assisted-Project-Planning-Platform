@@ -1,0 +1,18 @@
+# Keep the web image build context small and free of secrets.
+node_modules
+**/node_modules
+dist
+.git
+.gitignore
+.env*
+!.env.example
+backend
+supabase
+.claude
+.vite
+*.log
+*.tsbuildinfo
+plan.md
+Dockerfile*
+!Dockerfile.web
+railway*.json

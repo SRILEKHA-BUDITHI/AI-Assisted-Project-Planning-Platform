@@ -1,0 +1,47 @@
+# Static SPA server for the ProjectAI web app (Railway).
+# Env: PORT (set by Railway), VITE_SUPABASE_URL and VITE_API_URL (used in the CSP).
+{
+	admin off
+	persist_config off
+	servers {
+		# Railway terminates TLS at its edge proxy.
+		trusted_proxies static private_ranges
+	}
+}
+
+:{$PORT:8080} {
+	root * /srv
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+		Cross-Origin-Opener-Policy "same-origin-allow-popups"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' {$VITE_SUPABASE_URL} {$VITE_API_URL}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		-Server
+	}
+
+	handle /healthz {
+		header Cache-Control "no-store"
+		respond "ok" 200
+	}
+
+	# Content-hashed build output: cache forever. Missing assets 404 (no SPA fallback)
+	# so a stale chunk never gets an HTML response cached as immutable.
+	handle /assets/* {
+		@found file
+		header @found Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
+	handle {
+		route {
+			try_files {path} /index.html
+			header Cache-Control "no-cache"
+			file_server
+		}
+	}
+}

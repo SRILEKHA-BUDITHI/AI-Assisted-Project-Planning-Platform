@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Screen } from '../App'
+import { useStepNav } from '@/lib/steps'
 
 interface WBSItem {
   code: string
@@ -41,9 +41,8 @@ const AI_ISSUES = [
   { type: 'warning', text: 'WBS code 1.3 has no testing or UAT work package before release' },
 ]
 
-interface Props { nav: (s: Screen) => void }
-
-export default function WBSBuilder({ nav }: Props) {
+export default function WBSBuilder() {
+  const nav = useStepNav()
   const [wbs, setWbs] = useState(INITIAL_WBS)
 
   function toggleExpand(code: string) {
@@ -179,7 +178,7 @@ export default function WBSBuilder({ nav }: Props) {
       </div>
 
       <div className="flex justify-between" style={{ marginTop: 24 }}>
-        <button onClick={() => nav('scope-review')} style={secondaryBtn}>← Back to Scope Review</button>
+        <button onClick={() => nav('scope')} style={secondaryBtn}>← Back to Scope Review</button>
         <button onClick={() => nav('constraints')} style={primaryBtn}>Continue to Constraints →</button>
       </div>
     </div>

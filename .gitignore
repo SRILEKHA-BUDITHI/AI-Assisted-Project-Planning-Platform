@@ -19,3 +19,27 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
+
+# Env files: never commit real values, but keep the documented templates
+!.env.example
+!**/.env.example
+
+# Python / backend
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+
+# Secrets that must never land in git
+gurobi.lic
+*.pem
+*.key

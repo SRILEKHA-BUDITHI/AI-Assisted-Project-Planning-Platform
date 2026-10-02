@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Screen } from '../App'
+import { useStepNav } from '@/lib/steps'
 
 const REASSIGNMENTS = [
   { task: '1.1.2 SAP Integration', current: 'Mark Chen (100% util)', recommended: 'Contract: SAP Specialist', reason: 'Skill gap + overallocation' },
@@ -25,9 +25,8 @@ const RESOURCE_UTIL = [
   { name: 'SAP Contractor', before: 0, after: 100 },
 ]
 
-interface Props { nav: (s: Screen) => void }
-
-export default function OptimizationResults({ nav }: Props) {
+export default function OptimizationResults() {
+  const nav = useStepNav()
   const [activeTab, setActiveTab] = useState<'reassignments' | 'schedule' | 'resources'>('reassignments')
   const [applied, setApplied] = useState(false)
 
