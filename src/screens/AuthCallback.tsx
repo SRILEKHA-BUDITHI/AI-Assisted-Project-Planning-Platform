@@ -23,6 +23,7 @@ function readUrlError(): string | null {
 export default function AuthCallback() {
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
+  const [confirmedElsewhere, setConfirmedElsewhere] = useState(false)
   const handled = useRef(false)
 
   useEffect(() => {
@@ -37,16 +38,41 @@ export default function AuthCallback() {
     }
     const next = safeNext(new URLSearchParams(window.location.search).get('next') ?? remembered)
 
+    // Supabase only issues `?code=` after it has verified the email, so a code
+    // that can't be exchanged here means the link was opened in a different
+    // browser than the one that signed up: the email *is* confirmed.
+    const hadCode = new URLSearchParams(window.location.search).has('code')
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         navigate(next, { replace: true })
+      } else if (hadCode && next === '/reset-password') {
+        setError(
+          'Password reset links must be opened in the same browser you requested them from. Request a new link from this device to continue.',
+        )
+      } else if (hadCode) {
+        setConfirmedElsewhere(true)
       } else {
         setError(
-          "We couldn't complete sign-in from this link. It may have expired, already been used, or been opened in a different browser. If you just confirmed your email, you can sign in now.",
+          "We couldn't complete sign-in from this link. It may have expired or already been used. If you just confirmed your email, you can sign in now.",
         )
       }
     })
   }, [navigate])
+
+  if (confirmedElsewhere) {
+    return (
+      <AuthLayout title="Your email is confirmed" subtitle="Your NirnAIn account is ready.">
+        <Alert tone="success">Sign in with your email and password to open your workspace on this device.</Alert>
+        <Link
+          to="/login"
+          className="mt-6 flex w-full items-center justify-center rounded-[4px] bg-primary px-4 py-[11px] text-sm font-semibold text-white hover:bg-[#3d3c85] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Sign in
+        </Link>
+      </AuthLayout>
+    )
+  }
 
   if (!error) return <FullPageSpinner label="Signing you in" />
 
