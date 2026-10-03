@@ -12,6 +12,7 @@ import CheckEmail from './screens/CheckEmail'
 import ForgotPassword from './screens/ForgotPassword'
 import ResetPassword from './screens/ResetPassword'
 import AuthCallback from './screens/AuthCallback'
+import AuthConfirm from './screens/AuthConfirm'
 import Dashboard from './screens/Dashboard'
 import CreateProject from './screens/CreateProject'
 import AIProjectIntake from './screens/AIProjectIntake'
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
       { path: 'register', element: <RegisterRedirect /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: 'auth/callback', element: <AuthCallback /> },
+      { path: 'auth/confirm', element: <AuthConfirm /> },
       {
         element: <RequireAuth />,
         children: [
