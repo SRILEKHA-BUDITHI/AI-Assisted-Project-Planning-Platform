@@ -11,7 +11,7 @@ export function RequireAuth() {
   if (loading) return <FullPageSpinner label="Loading your workspace" />
   if (!session) {
     const current = `${location.pathname}${location.search}${location.hash}`
-    const to = current === '/' ? '/login' : `/login?next=${encodeURIComponent(current)}`
+    const to = current === '/dashboard' ? '/login' : `/login?next=${encodeURIComponent(current)}`
     return <Navigate to={to} replace />
   }
   return <Outlet />

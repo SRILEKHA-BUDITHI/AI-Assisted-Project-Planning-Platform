@@ -46,7 +46,7 @@ function useCurrentProjectId(): string | undefined {
 /** Name of the screen in the current URL, used as the assistant's context. */
 function useScreenLabel(): string {
   const { pathname } = useLocation()
-  if (pathname === '/') return 'Dashboard'
+  if (pathname === '/dashboard') return 'Dashboard'
   if (pathname === '/projects/new') return 'Create Project'
   const segment = /^\/projects\/[^/]+\/([^/]+)/.exec(pathname)?.[1]
   return FLOW_STEPS.find((s) => s.segment === segment)?.label ?? 'Dashboard'
@@ -112,7 +112,7 @@ export default function Shell({ children }: { children: ReactNode }) {
       <aside className="flex w-[232px] shrink-0 flex-col border-r border-border bg-[#ebe8fa] text-secondary-foreground">
         {/* Logo */}
         <div className="border-b border-border px-5 py-5">
-          <Link to="/" className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+          <Link to="/dashboard" className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
             <BrandMark />
             <div>
               <BrandName className="block text-[15px] leading-[1.2] text-foreground" />
@@ -124,7 +124,7 @@ export default function Shell({ children }: { children: ReactNode }) {
         {/* Nav */}
         <nav aria-label="Main" className="flex-1 overflow-y-auto px-3 py-4">
           <div className="mb-1.5 pl-2 text-[10px] uppercase tracking-[0.08em] text-muted-foreground">Workflow</div>
-          <NavLink to="/" end className={({ isActive }) => navItemClass(isActive)}>
+          <NavLink to="/dashboard" end className={({ isActive }) => navItemClass(isActive)}>
             {({ isActive }) => (
               <>
                 <StepBadge active={isActive} />

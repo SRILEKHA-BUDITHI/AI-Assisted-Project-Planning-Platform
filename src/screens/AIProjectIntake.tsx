@@ -111,7 +111,7 @@ export default function AIProjectIntake() {
 
           {/* Analyze button */}
           <div className="flex items-center justify-between" style={{ marginTop: 20 }}>
-            <button onClick={() => navigate('/')} style={secondaryBtn}>← Back to Dashboard</button>
+            <button onClick={() => navigate('/dashboard')} style={secondaryBtn}>← Back to Dashboard</button>
             <div className="flex items-center gap-10">
               {analyzed && (
                 <span style={{ fontSize: 13, color: '#3f8a6a', fontWeight: 500 }}>✓ Analysis complete — 6 sections extracted</span>

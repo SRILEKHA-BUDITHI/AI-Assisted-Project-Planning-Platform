@@ -59,7 +59,7 @@ export default function ResetPassword() {
       setSubmitting(false)
       return
     }
-    navigate('/', { replace: true, state: { notice: 'Your password has been updated.' } })
+    navigate('/dashboard', { replace: true, state: { notice: 'Your password has been updated.' } })
   }
 
   const confirmMismatch = confirm.length > 0 && confirm !== password
