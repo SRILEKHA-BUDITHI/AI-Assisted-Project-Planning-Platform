@@ -13,6 +13,7 @@ import ForgotPassword from './screens/ForgotPassword'
 import ResetPassword from './screens/ResetPassword'
 import AuthCallback from './screens/AuthCallback'
 import AuthConfirm from './screens/AuthConfirm'
+import LandingPage from './screens/LandingPage'
 import Dashboard from './screens/Dashboard'
 import CreateProject from './screens/CreateProject'
 import AIProjectIntake from './screens/AIProjectIntake'
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <RouteError />,
     children: [
+      { index: true, element: <LandingPage /> },
       {
         element: <PublicOnly />,
         children: [
@@ -73,7 +75,7 @@ const router = createBrowserRouter([
                 // Errors inside a page render within the shell so navigation stays usable.
                 errorElement: <RouteError inline />,
                 children: [
-                  { index: true, element: <Dashboard /> },
+                  { path: 'dashboard', element: <Dashboard /> },
                   { path: 'projects/new', element: <CreateProject /> },
                   {
                     path: 'projects/:projectId',

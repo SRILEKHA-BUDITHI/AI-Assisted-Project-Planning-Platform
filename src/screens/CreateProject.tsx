@@ -199,7 +199,7 @@ export default function CreateProject() {
     try {
       const project = await createProject.mutateAsync(payload)
       if (intent === 'draft') {
-        navigate('/', { state: { notice: `Draft “${project.name}” saved.` } })
+        navigate('/dashboard', { state: { notice: `Draft “${project.name}” saved.` } })
       } else {
         navigate(`/projects/${encodeURIComponent(project.id)}/intake`)
       }
@@ -416,7 +416,7 @@ export default function CreateProject() {
 
         <div className="flex items-center justify-between" style={{ marginTop: 24 }}>
           <Link
-            to="/"
+            to="/dashboard"
             className="inline-flex items-center rounded-[4px] border border-border bg-white px-4 py-[9px] text-[13px] text-secondary-foreground hover:bg-[#faf9fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             ← Back to Dashboard
@@ -438,7 +438,7 @@ export default function CreateProject() {
 function Breadcrumb() {
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
-      <Link to="/" className="hover:text-foreground hover:underline">
+      <Link to="/dashboard" className="hover:text-foreground hover:underline">
         Dashboard
       </Link>
       <span aria-hidden="true">›</span>
