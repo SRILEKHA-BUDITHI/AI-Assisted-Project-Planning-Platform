@@ -1,4 +1,4 @@
-# ProjectAI — AI-Assisted Project Planning Platform
+# NirnAIn — AI-Assisted Project Planning Platform
 
 Production SaaS used by real users. Treat every change as going to production: `main` auto-deploys.
 Architecture and roadmap: [plan.md](plan.md).
@@ -62,6 +62,10 @@ cd backend && uv sync && cp .env.example .env && uv run uvicorn app.main:app --r
 ```
 
 CLIs used by the team: `gh`, `supabase`, `railway`, `uv`, `pnpm`.
+
+## Figma Make design source
+
+The UI design lives in Figma Make (file key `6VKNLoLa3lSuINKDTVQkbs`). The repo is the source of truth for the running app: port design changes into the real components (keep Supabase auth, React Router, live data). Don't sync Figma Make's mock app over `src/`. Public site: `/` landing page, `/login`, `/signup` (`/register` redirects), app at `/dashboard`.
 
 ## Figma Make notes
 

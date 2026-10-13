@@ -571,11 +571,16 @@ Audio STT intake · OCR for scanned PDFs · real-time collaboration on the WBS �
 | 2 | Railway project `projectai`: services `web` + `api`, domains, base variables | ✅ Done |
 | 3 | Supabase production project `projectai-prod` (us-east-1), 5 migrations live, keys wired into Railway + GitHub | ✅ Done |
 | 4 | PRs #1–#3 merged; CI green; migrations auto-pushed on `main`; web + api live; `main` protected (PR + 4 checks, squash-only) | ✅ Done |
-| 4a | **Install the Railway GitHub App** on the repo, re-link both services, enable "Wait for CI". Until then, Railway does not redeploy on push. | ⚠️ Blocked on owner |
-| 5 | **Cloudflare: Pages for the frontend + custom domain DNS** | 📝 Next task: plan first, then execute |
-| 6 | **Custom SMTP (Resend) for auth emails.** Required before real users: Supabase's default mailer only sends to project team members, a few emails per hour | Planned, high priority |
+| 4a | Railway GitHub App installed; both services auto-deploy from `main` with "Wait for CI" | ✅ Done |
+| 4b | NirnAIn redesign from Figma Make (PR #5), landing page at `/` + dashboard at `/dashboard` (PR #7) | ✅ Done |
+| 4c | Cross-device email links: "email confirmed" screen (PR #6); `/auth/confirm` + branded templates ready, activate with custom SMTP | ✅ Partly (needs #6) |
+| 4d | Daily production health + keep-alive (Supabase free tier pauses after ~7 days idle; it paused on 2026-10-12) | ✅ Done |
+| 5 | **Domain + Cloudflare DNS** (custom domain for web + api). Unblocks #6. | 📝 Next: needs a domain from the owner |
+| 6 | **Custom SMTP (Resend) for auth emails.** Required before real users: default mailer only reaches Supabase team members. Needs a verified domain (#5). Then `supabase config push` activates the branded templates. | ⏳ Blocked on #5 |
 | 6b | Google + Microsoft OAuth apps | Planned |
 | 6c | Raise required PR approvals to 1 + enable code-owner review once teammates are added to CODEOWNERS | Planned |
+| 6d | Upgrade Supabase to Pro before real users (no auto-pause, backups, higher limits) | Planned, owner decision |
+| 6e | Register "Organization" field (DB trigger change) · Terms/Privacy pages + checkbox · landing-page feature claims vs built features | Planned |
 | 7 | AI intake, WBS, OR-Tools optimizer (Phases 2–5 of §11) | Planned |
 
 ### Current Railway resources
