@@ -1,8 +1,10 @@
-# ProjectAI — AI-Assisted Project Planning Platform
+# NirnAIn — AI-Assisted Project Planning Platform
 
 Plan projects intelligently: AI turns raw meeting notes and documents into structured scope, builds a Work Breakdown Structure, and an optimization engine produces a feasible schedule and resource plan under real budget, deadline, capacity and skill constraints.
 
 **Flow:** Create Project → AI Intake → Scope Review → WBS Builder → Constraints → Optimization Results
+
+**Live:** https://web-production-e916f.up.railway.app (landing page) · app at `/dashboard` · API https://api-production-c6141.up.railway.app/health
 
 ## Architecture
 
