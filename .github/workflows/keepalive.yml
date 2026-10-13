@@ -29,6 +29,7 @@ jobs:
         env:
           # Publishable key: public by design (it's in the web app bundle).
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-        run: curl --fail --silent --show-error --retry 3 --retry-delay 20 --retry-all-errors -o /dev/null -H "apikey: $SUPABASE_PUBLISHABLE_KEY" "$SUPABASE_URL/auth/v1/health"
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 20 --retry-all-errors \n            -o /dev/null -H "apikey: $SUPABASE_PUBLISHABLE_KEY" "$SUPABASE_URL/auth/v1/health"
       - name: Website
         run: curl --fail --silent --show-error --retry 3 --retry-delay 20 --retry-all-errors -o /dev/null "$WEB_URL/healthz"
