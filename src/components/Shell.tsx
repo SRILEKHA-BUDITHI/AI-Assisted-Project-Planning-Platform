@@ -27,7 +27,7 @@ function StepBadge({ number, active, disabled }: { number?: number; active: bool
       aria-hidden="true"
       className={cx(
         'mono flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full text-[10px]',
-        active ? 'bg-secondary text-primary' : 'bg-[#dcd8f3] text-primary',
+        active ? 'bg-secondary text-primary' : 'bg-[#DCCFB8] text-primary',
         disabled && 'opacity-60',
       )}
     >
@@ -109,7 +109,7 @@ export default function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <aside className="flex w-[232px] shrink-0 flex-col border-r border-border bg-[#ebe8fa] text-secondary-foreground">
+      <aside className="flex w-[232px] shrink-0 flex-col border-r border-border bg-[#E8DCC6] text-secondary-foreground">
         {/* Logo */}
         <div className="border-b border-border px-5 py-5">
           <Link to="/dashboard" className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
@@ -142,9 +142,9 @@ export default function Shell({ children }: { children: ReactNode }) {
                   {project.data.name}
                 </div>
               ) : project.isError ? (
-                <div className="mt-0.5 text-xs text-[#c4506a]">Project unavailable</div>
+                <div className="mt-0.5 text-xs text-[#A83A4A]">Project unavailable</div>
               ) : (
-                <div className="mt-1.5 h-3 w-28 animate-pulse rounded bg-[#dcd8f3]" />
+                <div className="mt-1.5 h-3 w-28 animate-pulse rounded bg-[#DCCFB8]" />
               )}
             </div>
           )}
@@ -161,7 +161,7 @@ export default function Shell({ children }: { children: ReactNode }) {
                     aria-describedby={hintId}
                     tabIndex={0}
                     title="Open or create a project first"
-                    className={cx(navItemBase, 'cursor-not-allowed text-[#8c89a8]')}
+                    className={cx(navItemBase, 'cursor-not-allowed text-[#94807A]')}
                   >
                     <StepBadge number={index + 1} active={false} disabled />
                     {step.label}
@@ -207,7 +207,7 @@ export default function Shell({ children }: { children: ReactNode }) {
           ref={openChatRef}
           type="button"
           onClick={() => toggleChat(true)}
-          className="fixed bottom-6 right-6 z-20 flex items-center gap-2 rounded-full bg-primary px-[18px] py-3 text-[13px] font-semibold text-primary-foreground shadow-lg transition hover:bg-[#3d3c85] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
+          className="fixed bottom-6 right-6 z-20 flex items-center gap-2 rounded-full bg-primary px-[18px] py-3 text-[13px] font-semibold text-primary-foreground shadow-lg transition hover:bg-[#5E262D] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
         >
           <span aria-hidden="true">✦</span> Ask NirnAIn AI
         </button>
@@ -272,7 +272,7 @@ function Avatar({ name, url, size = 28 }: { name: string; url: string | null; si
   return (
     <div
       aria-hidden="true"
-      className="flex shrink-0 items-center justify-center rounded-full bg-[#c9e8dc] font-semibold text-foreground"
+      className="flex shrink-0 items-center justify-center rounded-full bg-[#C9D6B8] font-semibold text-foreground"
       style={{ width: size, height: size, fontSize: size * 0.4 }}
     >
       {initials(name)}
@@ -354,7 +354,7 @@ function UserMenu({ identity }: { identity: AccountIdentity }) {
             role="menuitem"
             onClick={handleSignOut}
             disabled={signingOut}
-            className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[13px] text-foreground hover:bg-background focus-visible:bg-muted focus-visible:outline-none disabled:text-[#9b98b5] cursor-pointer"
+            className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[13px] text-foreground hover:bg-background focus-visible:bg-muted focus-visible:outline-none disabled:text-[#A99A8E] cursor-pointer"
           >
             {signingOut ? (
               <Spinner size={14} />
@@ -385,7 +385,7 @@ function UserMenu({ identity }: { identity: AccountIdentity }) {
           <div className="truncate text-xs font-medium text-foreground">{name}</div>
           <div className="truncate text-[10px] text-muted-foreground">{subtitle}</div>
         </div>
-        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6987" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7A6063" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M7 15l5-5 5 5" />
         </svg>
         <span className="sr-only">Open account menu</span>

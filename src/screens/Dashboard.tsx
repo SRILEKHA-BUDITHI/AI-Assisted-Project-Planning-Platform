@@ -16,13 +16,13 @@ import {
 import { Button, ErrorState, Skeleton, Spinner } from '@/components/ui'
 
 const STATUS_COLOR: Record<ProjectStatus, string> = {
-  draft: '#7d7a99',
+  draft: '#8F7B74',
   planning: '#4455aa',
-  on_track: '#3f8a6a',
+  on_track: '#4F7A4A',
   at_risk: '#a8691f',
-  delayed: '#c4506a',
-  completed: '#4b4a9e',
-  archived: '#9b98b5',
+  delayed: '#A83A4A',
+  completed: '#722F37',
+  archived: '#A99A8E',
 }
 
 const isAtRisk = (status: ProjectStatus) => status === 'at_risk' || status === 'delayed'
@@ -57,7 +57,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between" style={{ marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Dashboard</h1>
-          <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2, minHeight: 20 }}>
+          <div style={{ fontSize: 13, color: '#7A6063', marginTop: 2, minHeight: 20 }}>
             {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
             {activeCount !== null && !isEmpty && ` — ${formatNumber(activeCount)} ${activeCount === 1 ? 'project' : 'projects'} in ${org.name}`}
           </div>
@@ -100,7 +100,7 @@ function CreateProjectLink({ large }: { large?: boolean }) {
   return (
     <Link
       to="/projects/new"
-      className="inline-flex items-center justify-center rounded-[4px] bg-primary font-semibold text-white transition-colors hover:bg-[#3d3c85] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="inline-flex items-center justify-center rounded-[4px] bg-primary font-semibold text-white transition-colors hover:bg-[#5E262D] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       style={{ padding: large ? '11px 24px' : '9px 20px', fontSize: large ? 14 : 13 }}
     >
       {large ? 'Create your first project' : '+ Create Project'}
@@ -150,7 +150,7 @@ function KpiRow({ summary, projects }: { summary: DashboardSummary | undefined; 
               <div style={{ fontSize: 26, fontWeight: 700, marginBottom: 4 }} title={k.title}>
                 {k.value}
               </div>
-              <div style={{ fontSize: 12, color: '#7d7a99' }}>{k.sub}</div>
+              <div style={{ fontSize: 12, color: '#8F7B74' }}>{k.sub}</div>
             </div>
           ))
         : KPI_LABELS.map((label) => (
@@ -183,14 +183,14 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
         <h2 id="health-heading" style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>
           Project Delivery Health
         </h2>
-        <div style={{ fontSize: 11, color: '#6b6987' }}>Current planning baseline</div>
+        <div style={{ fontSize: 11, color: '#7A6063' }}>Current planning baseline</div>
       </div>
       {query.isError && !query.data ? (
         <ErrorState compact message={errorMessage(query.error)} onRetry={() => query.refetch()} retrying={query.isFetching} />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <div role="table" aria-labelledby="health-heading" style={{ minWidth: 560 }}>
-            <div role="row" style={{ ...HEALTH_GRID, padding: '0 8px 7px', borderBottom: '1px solid #e4e2f7' }}>
+            <div role="row" style={{ ...HEALTH_GRID, padding: '0 8px 7px', borderBottom: '1px solid #E8DCC6' }}>
               {HEALTH_COLUMNS.map((label) => (
                 <span key={label} role="columnheader" style={{ ...thStyle, padding: 0, fontSize: 10 }}>
                   {label}
@@ -199,7 +199,7 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
             </div>
             {query.isPending
               ? [0, 1, 2].map((i) => (
-                  <div key={i} role="row" style={{ ...HEALTH_GRID, padding: '12px 8px', borderBottom: '1px solid #eeecf9' }}>
+                  <div key={i} role="row" style={{ ...HEALTH_GRID, padding: '12px 8px', borderBottom: '1px solid #EFE5D2' }}>
                     {HEALTH_COLUMNS.map((c) => (
                       <span key={c} role="cell">
                         <Skeleton style={{ height: 12, width: c === 'Project' ? 120 : 48 }} />
@@ -208,7 +208,7 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
                   </div>
                 ))
               : rows.map((p) => (
-                  <div key={p.id} role="row" style={{ ...HEALTH_GRID, padding: '10px 8px', borderBottom: '1px solid #eeecf9' }}>
+                  <div key={p.id} role="row" style={{ ...HEALTH_GRID, padding: '10px 8px', borderBottom: '1px solid #EFE5D2' }}>
                     <span role="cell" style={{ minWidth: 0 }}>
                       <span style={{ display: 'block', fontSize: 12, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={p.name}>
                         {p.name}
@@ -219,11 +219,11 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
                       <span style={{ display: 'block', fontSize: 12, fontFamily: 'DM Mono, monospace' }} title={formatMoney(p.budgetCents, p.currency)}>
                         {formatMoney(p.budgetCents, p.currency, { compact: true })}
                       </span>
-                      <span style={{ fontSize: 10, color: '#7d7a99' }}>Planned budget</span>
+                      <span style={{ fontSize: 10, color: '#8F7B74' }}>Planned budget</span>
                     </span>
                     <span role="cell">
                       <span style={{ display: 'block', fontSize: 12 }}>—</span>
-                      <span style={{ fontSize: 10, color: '#7d7a99' }}>Due {formatDate(p.targetEndDate)}</span>
+                      <span style={{ fontSize: 10, color: '#8F7B74' }}>Due {formatDate(p.targetEndDate)}</span>
                     </span>
                     <span role="cell" style={healthEmpty}>—</span>
                     <span role="cell" style={healthEmpty}>—</span>
@@ -232,10 +232,10 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
                 ))}
           </div>
           {!query.isPending && rows.length === 0 && (
-            <div style={{ padding: '24px 12px', textAlign: 'center', fontSize: 13, color: '#6b6987' }}>No projects yet.</div>
+            <div style={{ padding: '24px 12px', textAlign: 'center', fontSize: 13, color: '#7A6063' }}>No projects yet.</div>
           )}
           {!query.isPending && rows.length > 0 && (
-            <p style={{ margin: '10px 0 0', fontSize: 11, color: '#7d7a99' }}>
+            <p style={{ margin: '10px 0 0', fontSize: 11, color: '#8F7B74' }}>
               Milestones, risks, utilization and constraint violations appear once a project has been planned and optimized.
             </p>
           )}
@@ -245,7 +245,7 @@ function DeliveryHealthCard({ query }: { query: ReturnType<typeof useProjects> }
   )
 }
 
-const healthEmpty: CSSProperties = { fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#7d7a99' }
+const healthEmpty: CSSProperties = { fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#8F7B74' }
 
 /* ─────────────────────────── AI findings ─────────────────────────── */
 
@@ -255,7 +255,7 @@ function AiFindingsCard() {
       <h2 id="ai-findings-heading" style={{ fontSize: 14, fontWeight: 600, margin: '0 0 12px' }}>
         Recent AI Findings
       </h2>
-      <div className="flex items-start gap-2.5" style={{ fontSize: 12, color: '#6b6987', lineHeight: 1.5 }}>
+      <div className="flex items-start gap-2.5" style={{ fontSize: 12, color: '#7A6063', lineHeight: 1.5 }}>
         <span
           aria-hidden="true"
           className="flex shrink-0 items-center justify-center rounded-md bg-secondary text-primary"
@@ -292,7 +292,7 @@ function ProjectsTable({ orgId }: { orgId: string }) {
           <h2 id="projects-heading" style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>
             Projects
           </h2>
-          {refreshing && <Spinner size={12} className="text-[#7d7a99]" />}
+          {refreshing && <Spinner size={12} className="text-[#8F7B74]" />}
         </div>
         <div className="flex items-center gap-2">
           <label className="sr-only" htmlFor="project-status-filter">
@@ -337,7 +337,7 @@ function ProjectsTable({ orgId }: { orgId: string }) {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #e4e2f7' }}>
+              <tr style={{ borderBottom: '1px solid #E8DCC6' }}>
                 {COLUMNS.map((h) => (
                   <th key={h} scope="col" style={thStyle}>
                     {h}
@@ -348,7 +348,7 @@ function ProjectsTable({ orgId }: { orgId: string }) {
             <tbody style={{ opacity: refreshing ? 0.6 : 1, transition: 'opacity 0.15s' }}>
               {projects.isPending
                 ? Array.from({ length: 5 }, (_, i) => (
-                    <tr key={i} style={{ borderBottom: i < 4 ? '1px solid #eeecf9' : 'none' }}>
+                    <tr key={i} style={{ borderBottom: i < 4 ? '1px solid #EFE5D2' : 'none' }}>
                       {COLUMNS.map((c, j) => (
                         <td key={c} style={tdStyle}>
                           <Skeleton style={{ height: 12, width: j === 1 ? 160 : j === 3 ? 80 : 56 }} />
@@ -367,7 +367,7 @@ function ProjectsTable({ orgId }: { orgId: string }) {
             </tbody>
           </table>
           {!projects.isPending && rows.length === 0 && (
-            <div style={{ padding: '32px 12px', textAlign: 'center', fontSize: 13, color: '#6b6987' }}>
+            <div style={{ padding: '32px 12px', textAlign: 'center', fontSize: 13, color: '#7A6063' }}>
               {filtering ? (
                 <>
                   No projects match your filters.{' '}
@@ -404,15 +404,15 @@ function ProjectRow({ project: p, last, onOpen }: { project: Project; last: bool
   const progress = Math.max(0, Math.min(100, Math.round(p.progressPct)))
   return (
     <tr
-      style={{ borderBottom: last ? 'none' : '1px solid #eeecf9', cursor: 'pointer' }}
-      className="hover:bg-[#faf9fe]"
+      style={{ borderBottom: last ? 'none' : '1px solid #EFE5D2', cursor: 'pointer' }}
+      className="hover:bg-[#FAF5EB]"
       onClick={(event) => {
         // Let the real link handle modified clicks (new tab etc.).
         if ((event.target as HTMLElement).closest('a')) return
         onOpen()
       }}
     >
-      <td style={{ ...tdStyle, fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6b6987', whiteSpace: 'nowrap' }}>{p.code}</td>
+      <td style={{ ...tdStyle, fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#7A6063', whiteSpace: 'nowrap' }}>{p.code}</td>
       <td style={{ ...tdStyle, fontWeight: 500 }}>
         <Link
           to={`/projects/${encodeURIComponent(p.id)}/intake`}
@@ -421,7 +421,7 @@ function ProjectRow({ project: p, last, onOpen }: { project: Project; last: bool
           {p.name}
         </Link>
         {isAtRisk(p.status) && (
-          <span style={{ marginLeft: 6, fontSize: 10, padding: '1px 6px', background: '#fde8ee', color: '#c4506a', borderRadius: 10 }}>Risk</span>
+          <span style={{ marginLeft: 6, fontSize: 10, padding: '1px 6px', background: '#F3D9D5', color: '#A83A4A', borderRadius: 10 }}>Risk</span>
         )}
       </td>
       <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
@@ -436,17 +436,17 @@ function ProjectRow({ project: p, last, onOpen }: { project: Project; last: bool
           aria-valuemax={100}
           aria-label={`${p.name} progress`}
         >
-          <div style={{ width: 60, height: 5, background: '#e4e2f7', borderRadius: 3 }}>
-            <div style={{ width: `${progress}%`, height: '100%', background: '#4b4a9e', borderRadius: 3 }} />
+          <div style={{ width: 60, height: 5, background: '#E8DCC6', borderRadius: 3 }}>
+            <div style={{ width: `${progress}%`, height: '100%', background: '#722F37', borderRadius: 3 }} />
           </div>
-          <span style={{ fontSize: 12, color: '#5a5878' }}>{progress}%</span>
+          <span style={{ fontSize: 12, color: '#6B5254' }}>{progress}%</span>
         </div>
       </td>
       <td style={{ ...tdStyle, fontFamily: 'DM Mono, monospace', fontSize: 12, whiteSpace: 'nowrap' }} title={formatMoney(p.budgetCents, p.currency)}>
         {formatMoney(p.budgetCents, p.currency, { compact: true })}
       </td>
-      <td style={{ ...tdStyle, fontSize: 12, color: '#5a5878', whiteSpace: 'nowrap' }}>{formatDate(p.targetEndDate)}</td>
-      <td style={{ ...tdStyle, fontSize: 12, color: '#5a5878' }}>{p.pmName ?? '—'}</td>
+      <td style={{ ...tdStyle, fontSize: 12, color: '#6B5254', whiteSpace: 'nowrap' }}>{formatDate(p.targetEndDate)}</td>
+      <td style={{ ...tdStyle, fontSize: 12, color: '#6B5254' }}>{p.pmName ?? '—'}</td>
     </tr>
   )
 }
@@ -465,7 +465,7 @@ function StatusLabel({ status }: { status: ProjectStatus }) {
 const LEVEL_STYLE: Record<NotificationLevel, { color: string; label: string }> = {
   info: { color: '#4455aa', label: 'Info' },
   warn: { color: '#a8691f', label: 'Warning' },
-  alert: { color: '#c4506a', label: 'Alert' },
+  alert: { color: '#A83A4A', label: 'Alert' },
 }
 
 function NotificationsCard() {
@@ -480,7 +480,7 @@ function NotificationsCard() {
           Notifications
         </h2>
         {items.length > 0 && (
-          <span style={{ fontSize: 11, padding: '1px 7px', borderRadius: 10, background: '#eeecf9', color: '#5a5878' }}>
+          <span style={{ fontSize: 11, padding: '1px 7px', borderRadius: 10, background: '#EFE5D2', color: '#6B5254' }}>
             {items.length} unread
           </span>
         )}
@@ -494,7 +494,7 @@ function NotificationsCard() {
       ) : notifications.isError ? (
         <ErrorState compact message={errorMessage(notifications.error)} onRetry={() => notifications.refetch()} retrying={notifications.isFetching} />
       ) : items.length === 0 ? (
-        <div style={{ fontSize: 12, color: '#7d7a99', padding: '4px 0' }}>You&apos;re all caught up.</div>
+        <div style={{ fontSize: 12, color: '#8F7B74', padding: '4px 0' }}>You&apos;re all caught up.</div>
       ) : (
         <ul style={{ display: 'flex', flexDirection: 'column', margin: 0, padding: 0, listStyle: 'none' }}>
           {items.slice(0, 6).map((n, i, list) => (
@@ -519,7 +519,7 @@ function NotificationItem({ notification: n, last, onOpen }: { notification: App
       <span style={{ minWidth: 0 }}>
         <span className="sr-only">{level.label}: </span>
         <span style={{ display: 'block' }}>{n.message}</span>
-        <span style={{ display: 'block', fontSize: 11, color: '#7d7a99', marginTop: 2 }}>{formatDateTime(n.createdAt)}</span>
+        <span style={{ display: 'block', fontSize: 11, color: '#8F7B74', marginTop: 2 }}>{formatDateTime(n.createdAt)}</span>
       </span>
     </>
   )
@@ -528,7 +528,7 @@ function NotificationItem({ notification: n, last, onOpen }: { notification: App
     alignItems: 'flex-start',
     gap: 10,
     fontSize: 12,
-    color: '#38375a',
+    color: '#4A2B2F',
     padding: '8px 0',
     width: '100%',
     textAlign: 'left',
@@ -536,7 +536,7 @@ function NotificationItem({ notification: n, last, onOpen }: { notification: App
     border: 'none',
   }
   return (
-    <li style={{ borderBottom: last ? 'none' : '1px solid #eeecf9' }}>
+    <li style={{ borderBottom: last ? 'none' : '1px solid #EFE5D2' }}>
       {onOpen ? (
         <button type="button" onClick={onOpen} style={{ ...style, cursor: 'pointer' }} className="hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary">
           {content}
@@ -565,22 +565,22 @@ function AtRiskCard({ orgId }: { orgId: string }) {
       ) : atRisk.isError ? (
         <ErrorState compact message={errorMessage(atRisk.error)} onRetry={() => atRisk.refetch()} retrying={atRisk.isFetching} />
       ) : atRisk.data.length === 0 ? (
-        <div style={{ fontSize: 12, color: '#7d7a99', padding: '4px 0' }}>No projects are at risk right now.</div>
+        <div style={{ fontSize: 12, color: '#8F7B74', padding: '4px 0' }}>No projects are at risk right now.</div>
       ) : (
         atRisk.data.map((p) => (
-          <div key={p.id} style={{ marginBottom: 12, padding: '10px 12px', background: '#faf9fe', border: '1px solid #e4e2f7', borderRadius: 4 }}>
+          <div key={p.id} style={{ marginBottom: 12, padding: '10px 12px', background: '#FAF5EB', border: '1px solid #E8DCC6', borderRadius: 4 }}>
             <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>{p.name}</div>
             <div style={{ marginBottom: 4 }}>
               <StatusLabel status={p.status} />
             </div>
-            <div style={{ fontSize: 11, color: '#7d7a99' }}>
+            <div style={{ fontSize: 11, color: '#8F7B74' }}>
               Due {formatDate(p.targetEndDate)}
               {p.pmName ? ` · ${p.pmName}` : ''}
             </div>
             <Link
               to={`/projects/${encodeURIComponent(p.id)}/optimization`}
               className="inline-block hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              style={{ marginTop: 8, fontSize: 11, padding: '4px 10px', border: '1px solid #d9d6ee', borderRadius: 3, background: '#fff', color: '#23223a' }}
+              style={{ marginTop: 8, fontSize: 11, padding: '4px 10px', border: '1px solid #CDBFAB', borderRadius: 3, background: '#fff', color: '#2E1A1D' }}
             >
               View Optimization →
             </Link>
@@ -606,9 +606,9 @@ function EmptyState({ orgName }: { orgName: string }) {
       <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
         <div
           aria-hidden="true"
-          style={{ width: 52, height: 52, borderRadius: 12, background: '#eeecf9', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 52, height: 52, borderRadius: 12, background: '#EFE5D2', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4b4a9e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#722F37" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="16" rx="2" />
             <path d="M3 9h18M8 13h5M8 16h8" />
           </svg>
@@ -616,7 +616,7 @@ function EmptyState({ orgName }: { orgName: string }) {
         <h2 id="empty-heading" style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px' }}>
           Plan your first project
         </h2>
-        <p style={{ fontSize: 14, color: '#6b6987', lineHeight: 1.6, margin: '0 0 28px' }}>
+        <p style={{ fontSize: 14, color: '#7A6063', lineHeight: 1.6, margin: '0 0 28px' }}>
           {orgName} doesn&apos;t have any projects yet. Create one and NirnAIn will guide you from intake to an optimized
           plan.
         </p>
@@ -624,15 +624,15 @@ function EmptyState({ orgName }: { orgName: string }) {
       </div>
       <ol
         className="grid"
-        style={{ gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginTop: 44, padding: 0, listStyle: 'none', borderTop: '1px solid #eeecf9', paddingTop: 28 }}
+        style={{ gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginTop: 44, padding: 0, listStyle: 'none', borderTop: '1px solid #EFE5D2', paddingTop: 28 }}
       >
         {FLOW_PREVIEW.map((step, i) => (
           <li key={step.title}>
-            <div className="mono" style={{ fontSize: 11, color: '#7d7a99', marginBottom: 6 }}>
+            <div className="mono" style={{ fontSize: 11, color: '#8F7B74', marginBottom: 6 }}>
               {String(i + 1).padStart(2, '0')}
             </div>
             <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{step.title}</div>
-            <div style={{ fontSize: 12, color: '#6b6987', lineHeight: 1.5 }}>{step.text}</div>
+            <div style={{ fontSize: 12, color: '#7A6063', lineHeight: 1.5 }}>{step.text}</div>
           </li>
         ))}
       </ol>
@@ -644,14 +644,14 @@ function EmptyState({ orgName }: { orgName: string }) {
 
 const cardStyle: CSSProperties = {
   background: '#fff',
-  border: '1px solid #e4e2f7',
+  border: '1px solid #E8DCC6',
   borderRadius: 6,
   padding: '20px 20px',
 }
 
 const kpiLabel: CSSProperties = {
   fontSize: 11,
-  color: '#6b6987',
+  color: '#7A6063',
   textTransform: 'uppercase',
   letterSpacing: '0.06em',
   marginBottom: 8,
@@ -661,7 +661,7 @@ const thStyle: CSSProperties = {
   textAlign: 'left',
   padding: '6px 10px',
   fontSize: 11,
-  color: '#6b6987',
+  color: '#7A6063',
   fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: '0.05em',
@@ -671,4 +671,4 @@ const thStyle: CSSProperties = {
 const tdStyle: CSSProperties = { padding: '10px 10px' }
 
 const inputSm =
-  'rounded-[4px] border border-border bg-white px-2.5 py-1.5 text-xs text-foreground outline-none transition-[border-color,box-shadow] focus:border-primary focus:shadow-[0_0_0_3px_rgba(75,74,158,0.16)]'
+  'rounded-[4px] border border-border bg-white px-2.5 py-1.5 text-xs text-foreground outline-none transition-[border-color,box-shadow] focus:border-primary focus:shadow-[0_0_0_3px_rgba(114,47,55,0.16)]'

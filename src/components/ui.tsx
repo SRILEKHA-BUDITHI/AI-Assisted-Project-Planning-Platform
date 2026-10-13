@@ -45,9 +45,9 @@ export function FullPageSpinner({ label = 'Loading' }: { label?: string }) {
 type ButtonVariant = 'primary' | 'secondary' | 'ghost'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white border border-primary hover:bg-[#3d3c85] disabled:bg-[#9594c4] disabled:border-[#9594c4]',
-  secondary: 'bg-white text-primary border border-border hover:bg-[#faf9fe] hover:border-[#b5b1dc] disabled:text-[#9b98b5]',
-  ghost: 'bg-transparent text-primary border border-transparent hover:bg-muted disabled:text-[#9b98b5]',
+  primary: 'bg-primary text-white border border-primary hover:bg-[#5E262D] disabled:bg-[#A86A70] disabled:border-[#A86A70]',
+  secondary: 'bg-white text-primary border border-border hover:bg-[#FAF5EB] hover:border-[#B7A89A] disabled:text-[#A99A8E]',
+  ghost: 'bg-transparent text-primary border border-transparent hover:bg-muted disabled:text-[#A99A8E]',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -101,8 +101,8 @@ export function Button({
 type AlertTone = 'error' | 'success' | 'info' | 'warning'
 
 const ALERT_TONES: Record<AlertTone, string> = {
-  error: 'border-[#f1c6d2] bg-[#fde8ee] text-[#9c3a52]',
-  success: 'border-[#b9e3cf] bg-[#eef8f3] text-[#2f6b52]',
+  error: 'border-[#E6BDB8] bg-[#F3D9D5] text-[#8A2F3D]',
+  success: 'border-[#BFD1AE] bg-[#EEF2E6] text-[#3E6339]',
   info: 'border-border bg-background text-secondary-foreground',
   warning: 'border-[#f1d9b8] bg-[#fdf3e7] text-[#8a5518]',
 }
@@ -177,10 +177,10 @@ function AlertIcon({ tone }: { tone: AlertTone }) {
 
 export const inputClass = cx(
   'w-full rounded-[4px] border border-border bg-white px-3 py-[9px] text-sm text-foreground',
-  'placeholder:text-[#9b98b5] outline-none transition-[border-color,box-shadow]',
-  'focus:border-primary focus:shadow-[0_0_0_3px_rgba(75,74,158,0.16)]',
-  'aria-[invalid=true]:border-[#c4506a] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(196,80,106,0.16)]',
-  'disabled:bg-background disabled:text-[#7d7a99]',
+  'placeholder:text-[#A99A8E] outline-none transition-[border-color,box-shadow]',
+  'focus:border-primary focus:shadow-[0_0_0_3px_rgba(114,47,55,0.16)]',
+  'aria-[invalid=true]:border-[#A83A4A] aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(196,80,106,0.16)]',
+  'disabled:bg-background disabled:text-[#8F7B74]',
 )
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -216,7 +216,7 @@ export function TextField({ label, error, hint, labelAside, trailing, id, classN
         {trailing && <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">{trailing}</div>}
       </div>
       {error && (
-        <p id={errorId} className="mt-1.5 text-xs text-[#c4506a]">
+        <p id={errorId} className="mt-1.5 text-xs text-[#A83A4A]">
           {error}
         </p>
       )}
@@ -278,7 +278,7 @@ export function PasswordChecklist({ password, id }: { password: string; id?: str
       {PASSWORD_RULES.map((rule) => {
         const met = rule.test(password)
         return (
-          <li key={rule.id} className={cx('flex items-center gap-1.5 text-xs transition-colors', met ? 'text-[#3f8a6a]' : 'text-[#7d7a99]')}>
+          <li key={rule.id} className={cx('flex items-center gap-1.5 text-xs transition-colors', met ? 'text-[#4F7A4A]' : 'text-[#8F7B74]')}>
             <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               {met ? <path d="M5 12.5l4.5 4.5L19 7.5" /> : <circle cx="12" cy="12" r="3.5" />}
             </svg>
@@ -314,7 +314,7 @@ export function ErrorState({
 }) {
   return (
     <div role="alert" className={cx('flex flex-col items-center text-center', compact ? 'py-6' : 'py-12')}>
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#fde8ee] text-[#c4506a]">
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#F3D9D5] text-[#A83A4A]">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 8v5M12 16h.01" />
           <circle cx="12" cy="12" r="9" />

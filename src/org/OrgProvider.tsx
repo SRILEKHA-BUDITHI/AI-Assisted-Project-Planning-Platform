@@ -84,7 +84,7 @@ export default function OrgProvider({ children }: { children: ReactNode }) {
 function CenteredCard({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
-      <div className="w-full max-w-md rounded-md border border-[#e4e2f7] bg-white px-8 py-8">
+      <div className="w-full max-w-md rounded-md border border-[#E8DCC6] bg-white px-8 py-8">
         <div className="mb-2 flex items-center justify-center gap-2">
           <BrandMark size={26} />
           <BrandName className="text-sm" />
