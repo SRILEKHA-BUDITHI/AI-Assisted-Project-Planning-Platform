@@ -110,8 +110,9 @@ jobs:
 
   deploy-db:
     name: Deploy · push migrations to production
-    needs: [web, api, db]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !cancelled() && !contains(needs.*.result, 'failure')
+    needs: [changes, web, api, db]
+    # Only when database files changed, so web/api deploys never depend on the DB being reachable.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.db == 'true' && !cancelled() && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     environment: production
     env:
