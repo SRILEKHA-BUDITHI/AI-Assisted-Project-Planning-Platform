@@ -50,12 +50,12 @@ export default function AuthLayout({
             <BrandName inverted className="text-base" />
           </div>
           <h2 className="mb-4 text-[28px] font-bold leading-[1.3]">{panel.heading}</h2>
-          <p className="text-sm leading-[1.7] text-[#d9d6ee]">{panel.text}</p>
+          <p className="text-sm leading-[1.7] text-[#CDBFAB]">{panel.text}</p>
           <ul className="mt-10 space-y-3.5">
             {FEATURES.map((feature) => (
-              <li key={feature} className="flex items-start gap-3 text-[13px] leading-5 text-[#e4e2f7]">
-                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#dcf3e8]">
-                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3f8a6a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <li key={feature} className="flex items-start gap-3 text-[13px] leading-5 text-[#E8DCC6]">
+                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#DDE7D0]">
+                  <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4F7A4A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
                   </svg>
                 </span>
@@ -64,7 +64,7 @@ export default function AuthLayout({
             ))}
           </ul>
         </div>
-        <div className="relative text-xs text-[#c9c6ee]">
+        <div className="relative text-xs text-[#E8C9C4]">
           © {new Date().getFullYear()} {APP_NAME} Inc.
         </div>
       </aside>
@@ -89,4 +89,4 @@ export default function AuthLayout({
 }
 
 export const linkClass =
-  'font-medium text-primary underline decoration-[#b5b1dc] underline-offset-2 hover:decoration-primary rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+  'font-medium text-primary underline decoration-[#B7A89A] underline-offset-2 hover:decoration-primary rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'

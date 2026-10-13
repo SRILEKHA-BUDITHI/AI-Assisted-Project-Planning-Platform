@@ -73,7 +73,7 @@ export default function CheckEmail() {
         </svg>
       </div>
 
-      <ul className="mb-6 space-y-2 text-[13px] leading-5 text-[#5a5878]">
+      <ul className="mb-6 space-y-2 text-[13px] leading-5 text-[#6B5254]">
         <li>• The link expires after 24 hours.</li>
         <li>• Can&apos;t find it? Check your spam or promotions folder.</li>
       </ul>

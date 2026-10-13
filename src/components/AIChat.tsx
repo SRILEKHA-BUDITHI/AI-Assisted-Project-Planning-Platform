@@ -64,9 +64,9 @@ export default function AIChat({
     <aside
       aria-labelledby={headingId}
       onKeyDown={onKeyDown}
-      className="fixed inset-y-0 right-0 z-30 flex w-[320px] max-w-full shrink-0 flex-col border-l border-border bg-white shadow-[-12px_0_32px_-16px_rgba(75,74,158,0.35)] min-[1100px]:static min-[1100px]:z-auto min-[1100px]:shadow-none"
+      className="fixed inset-y-0 right-0 z-30 flex w-[320px] max-w-full shrink-0 flex-col border-l border-border bg-white shadow-[-12px_0_32px_-16px_rgba(114,47,55,0.35)] min-[1100px]:static min-[1100px]:z-auto min-[1100px]:shadow-none"
     >
-      <header className="flex items-center justify-between border-b border-border bg-[#ebe8fa] px-4 py-3">
+      <header className="flex items-center justify-between border-b border-border bg-[#E8DCC6] px-4 py-3">
         <div className="flex items-center gap-2">
           <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-xs text-primary-foreground">
             ✦
@@ -77,14 +77,14 @@ export default function AIChat({
                 NirnAIn AI
               </h2>
               <span
-                className="rounded-full border border-[#e7c9a3] bg-[#fdeedd] px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.06em] text-[#8a5518]"
+                className="rounded-full border border-[#e7c9a3] bg-[#F5E3C8] px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.06em] text-[#8a5518]"
                 title="Answers are placeholders until the AI service is connected."
               >
                 Preview
               </span>
             </div>
             <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#3f8a6a]" /> Context: {contextLabel}
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#4F7A4A]" /> Context: {contextLabel}
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function AIChat({
                 <button
                   type="button"
                   onClick={() => send(s)}
-                  className="w-full rounded-lg bg-accent px-3 py-2 text-left text-xs text-accent-foreground transition-colors hover:bg-[#c9e8dc] cursor-pointer"
+                  className="w-full rounded-lg bg-accent px-3 py-2 text-left text-xs text-accent-foreground transition-colors hover:bg-[#C9D6B8] cursor-pointer"
                 >
                   {s}
                 </button>
@@ -155,12 +155,12 @@ export default function AIChat({
           placeholder="Ask about your plan…"
           autoComplete="off"
           maxLength={500}
-          className="min-w-0 flex-1 rounded-lg border border-border bg-[#faf9fe] px-2.5 py-2 text-[13px] text-foreground outline-none placeholder:text-[#9b98b5] focus:border-primary focus:shadow-[0_0_0_3px_rgba(75,74,158,0.16)]"
+          className="min-w-0 flex-1 rounded-lg border border-border bg-[#FAF5EB] px-2.5 py-2 text-[13px] text-foreground outline-none placeholder:text-[#A99A8E] focus:border-primary focus:shadow-[0_0_0_3px_rgba(114,47,55,0.16)]"
         />
         <button
           type="submit"
           disabled={!input.trim() || typing}
-          className="rounded-lg bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-[#3d3c85] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+          className="rounded-lg bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-[#5E262D] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           Send
         </button>

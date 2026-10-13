@@ -165,8 +165,8 @@ export default function WBSBuilder() {
     if (event.key === 'ArrowDown' && index < siblings.length - 1) moveItem(siblings[index + 1].code, item.code)
   }
 
-  const issueColor: Record<string, string> = { missing: '#fdeedd', duplicate: '#fdeedd', warning: '#fde8ee' }
-  const issueTag: Record<string, string> = { missing: '#a8691f', duplicate: '#a8691f', warning: '#c4506a' }
+  const issueColor: Record<string, string> = { missing: '#F5E3C8', duplicate: '#F5E3C8', warning: '#F3D9D5' }
+  const issueTag: Record<string, string> = { missing: '#a8691f', duplicate: '#a8691f', warning: '#A83A4A' }
 
   return (
     <div style={{ padding: '32px 36px' }}>
@@ -175,14 +175,14 @@ export default function WBSBuilder() {
       <div className="flex items-center justify-between" style={{ marginBottom: 24 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700 }}>WBS Builder</div>
-          <div style={{ fontSize: 13, color: '#6b6987', marginTop: 2 }}>
+          <div style={{ fontSize: 13, color: '#7A6063', marginTop: 2 }}>
             Review and refine the hierarchical Work Breakdown Structure. AI has pre-populated based on scope.
           </div>
         </div>
         <div className="flex gap-8">
-          <div className="flex" style={{ border: '1px solid #d9d6ee', borderRadius: 4, overflow: 'hidden', marginRight: 8 }}>
+          <div className="flex" style={{ border: '1px solid #CDBFAB', borderRadius: 4, overflow: 'hidden', marginRight: 8 }}>
             {(['chart', 'list'] as const).map(v => (
-              <button key={v} onClick={() => setView(v)} style={{ padding: '9px 14px', fontSize: 13, border: 'none', cursor: 'pointer', background: view === v ? '#e4e2f7' : '#fff', color: view === v ? '#4b4a9e' : '#38375a', fontWeight: view === v ? 600 : 400 }}>
+              <button key={v} onClick={() => setView(v)} style={{ padding: '9px 14px', fontSize: 13, border: 'none', cursor: 'pointer', background: view === v ? '#E8DCC6' : '#fff', color: view === v ? '#722F37' : '#4A2B2F', fontWeight: view === v ? 600 : 400 }}>
                 {v === 'chart' ? 'Org Chart' : 'List'}
               </button>
             ))}
@@ -203,7 +203,7 @@ export default function WBSBuilder() {
         )}
         {/* WBS tree */}
         <div style={{ ...cardStyle, display: view === 'list' ? 'block' : 'none' }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#6b6987', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #eeecf9', display: 'grid', gridTemplateColumns: '120px 1fr 80px 100px 80px', gap: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#7A6063', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #EFE5D2', display: 'grid', gridTemplateColumns: '120px 1fr 80px 100px 80px', gap: 10 }}>
             <span>WBS Code</span>
             <span>Name</span>
             <span>Duration</span>
@@ -244,16 +244,16 @@ export default function WBSBuilder() {
                 alignItems: 'center',
                 padding: '7px 0',
                 paddingLeft: item.level === 2 ? 16 : item.level === 3 ? 32 : 0,
-                borderBottom: '1px solid #f4f2fc',
-                borderLeft: item.level === 2 ? '2px solid #d9d6ee' : item.level === 3 ? '2px solid #e4e2f7' : 'none',
+                borderBottom: '1px solid #F3EADB',
+                borderLeft: item.level === 2 ? '2px solid #CDBFAB' : item.level === 3 ? '2px solid #E8DCC6' : 'none',
                 marginLeft: item.level === 2 ? 16 : item.level === 3 ? 32 : 0,
-                background: item.level === 1 ? '#faf9fe' : 'transparent',
-                boxShadow: dropTarget === item.code ? 'inset 0 2px #6b6987' : 'none',
+                background: item.level === 1 ? '#FAF5EB' : 'transparent',
+                boxShadow: dropTarget === item.code ? 'inset 0 2px #7A6063' : 'none',
                 opacity: draggedCode === item.code ? 0.45 : 1,
                 cursor: item.level > 1 ? 'grab' : 'default',
               }}
             >
-              <span className="flex items-center gap-2" style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6b6987' }}>
+              <span className="flex items-center gap-2" style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#7A6063' }}>
                 <span
                   aria-hidden="true"
                   title={item.level > 1 ? 'Drag (or Alt+↑/↓) to reorder' : undefined}
@@ -281,12 +281,12 @@ export default function WBSBuilder() {
                 )}
                 {item.name}
               </span>
-              <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6b6987' }}>{item.duration || '—'}</span>
-              <span style={{ fontSize: 12, color: '#5a5878' }}>{item.owner || '—'}</span>
+              <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#7A6063' }}>{item.duration || '—'}</span>
+              <span style={{ fontSize: 12, color: '#6B5254' }}>{item.owner || '—'}</span>
               <div className="flex gap-4">
-                <button style={{ fontSize: 11, color: '#5a5878', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 7px', background: '#faf9fe', cursor: 'pointer' }}>Edit</button>
+                <button style={{ fontSize: 11, color: '#6B5254', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 7px', background: '#FAF5EB', cursor: 'pointer' }}>Edit</button>
                 {item.level < 3 && (
-                  <button style={{ fontSize: 11, color: '#5a5878', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 7px', background: '#faf9fe', cursor: 'pointer' }}>+ Sub</button>
+                  <button style={{ fontSize: 11, color: '#6B5254', border: '1px solid #e0e0e0', borderRadius: 3, padding: '2px 7px', background: '#FAF5EB', cursor: 'pointer' }}>+ Sub</button>
                 )}
               </div>
             </div>
@@ -298,16 +298,16 @@ export default function WBSBuilder() {
           <div style={cardStyle}>
             <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 13, fontWeight: 600 }}>AI Validation</div>
-              <span style={{ fontSize: 10, color: '#6b6987' }}>{lastValidated}</span>
+              <span style={{ fontSize: 10, color: '#7A6063' }}>{lastValidated}</span>
             </div>
-            <div style={{ fontSize: 12, color: '#3f8a6a', fontWeight: 500, marginBottom: 10 }}>WBS structure is valid (3 levels)</div>
+            <div style={{ fontSize: 12, color: '#4F7A4A', fontWeight: 500, marginBottom: 10 }}>WBS structure is valid (3 levels)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {AI_ISSUES.map((issue, i) => (
-                <div key={i} style={{ padding: '8px 10px', background: issueColor[issue.type] || '#f4f2fc', borderRadius: 4, borderLeft: `3px solid ${issueTag[issue.type]}` }}>
+                <div key={i} style={{ padding: '8px 10px', background: issueColor[issue.type] || '#F3EADB', borderRadius: 4, borderLeft: `3px solid ${issueTag[issue.type]}` }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: issueTag[issue.type], textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>
                     {issue.type}
                   </div>
-                  <div style={{ fontSize: 12, color: '#38375a', lineHeight: 1.5 }}>{issue.text}</div>
+                  <div style={{ fontSize: 12, color: '#4A2B2F', lineHeight: 1.5 }}>{issue.text}</div>
                 </div>
               ))}
             </div>
@@ -318,7 +318,7 @@ export default function WBSBuilder() {
 
           <div style={cardStyle}>
             <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>WBS Summary</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: '#5a5878' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: '#6B5254' }}>
               {[
                 ['Level 1 (Project)', '1'],
                 ['Level 2 (Deliverables)', '5'],
@@ -327,9 +327,9 @@ export default function WBSBuilder() {
                 ['Unassigned Packages', '2'],
                 ['Estimated Weeks', '38w total'],
               ].map(([k, v]) => (
-                <div key={k} className="flex justify-between" style={{ paddingBottom: 5, borderBottom: '1px solid #eeecf9' }}>
+                <div key={k} className="flex justify-between" style={{ paddingBottom: 5, borderBottom: '1px solid #EFE5D2' }}>
                   <span>{k}</span>
-                  <span style={{ fontFamily: 'DM Mono, monospace', fontWeight: 500, color: '#23223a' }}>{v}</span>
+                  <span style={{ fontFamily: 'DM Mono, monospace', fontWeight: 500, color: '#2E1A1D' }}>{v}</span>
                 </div>
               ))}
             </div>
@@ -345,7 +345,7 @@ export default function WBSBuilder() {
   )
 }
 
-const LINE = '#b9b4e3'
+const LINE = '#B9A48C'
 
 function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
   wbs: WBSItem[]
@@ -376,7 +376,7 @@ function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 'max-content', padding: '4px 8px 12px' }}>
       <div
         {...selectable(root.code)}
-        style={{ ...nodeBase, background: '#4b4a9e', color: '#fff', width: 220, outline: selectedCode === root.code ? '3px solid #c9c6ee' : 'none' }}
+        style={{ ...nodeBase, background: '#722F37', color: '#fff', width: 220, outline: selectedCode === root.code ? '3px solid #E8C9C4' : 'none' }}
       >
         <div className="mono" style={{ fontSize: 10, opacity: 0.8 }}>{root.code}</div>
         <div style={{ fontSize: 13, fontWeight: 700 }}>{root.name}</div>
@@ -396,13 +396,13 @@ function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
                   <div style={{ width: 2, height: 20, background: LINE }} />
                   <div
                     {...selectable(d.code)}
-                    style={{ ...nodeBase, background: '#e4e2f7', color: '#23223a', width: '100%', outline: selectedCode === d.code ? '3px solid #4b4a9e55' : 'none', border: '1px solid #cfcbee' }}
+                    style={{ ...nodeBase, background: '#E8DCC6', color: '#2E1A1D', width: '100%', outline: selectedCode === d.code ? '3px solid #722F3755' : 'none', border: '1px solid #D8CAB2' }}
                   >
-                    <div className="mono" style={{ fontSize: 10, color: '#6b6987' }}>{d.code}</div>
+                    <div className="mono" style={{ fontSize: 10, color: '#7A6063' }}>{d.code}</div>
                     <div style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.3 }}>{d.name}</div>
                     <button
                       onClick={(e) => { e.stopPropagation(); onToggle(d.code) }}
-                      style={{ marginTop: 4, fontSize: 10, color: '#4b4a9e', background: '#fff', border: '1px solid #cfcbee', borderRadius: 10, padding: '1px 8px', cursor: 'pointer' }}
+                      style={{ marginTop: 4, fontSize: 10, color: '#722F37', background: '#fff', border: '1px solid #D8CAB2', borderRadius: 10, padding: '1px 8px', cursor: 'pointer' }}
                     >
                       {d.expanded ? '− ' : '+ '}{kids.length} packages
                     </button>
@@ -416,13 +416,13 @@ function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
                           <div style={{ position: 'absolute', left: -8, width: 10, height: 2, background: LINE }} />
                           <div
                             {...selectable(k.code)}
-                            style={{ ...nodeBase, flex: 1, textAlign: 'left', background: unassigned(k) ? '#fdeedd' : '#dcf3e8', color: '#23223a', fontSize: 11, lineHeight: 1.35, outline: selectedCode === k.code ? '3px solid #4b4a9e55' : 'none', padding: '6px 8px' }}
+                            style={{ ...nodeBase, flex: 1, textAlign: 'left', background: unassigned(k) ? '#F5E3C8' : '#DDE7D0', color: '#2E1A1D', fontSize: 11, lineHeight: 1.35, outline: selectedCode === k.code ? '3px solid #722F3755' : 'none', padding: '6px 8px' }}
                           >
-                            <div className="flex justify-between mono" style={{ fontSize: 10, color: '#6b6987' }}>
+                            <div className="flex justify-between mono" style={{ fontSize: 10, color: '#7A6063' }}>
                               <span>{k.code}</span><span>{k.duration}</span>
                             </div>
                             <div style={{ fontWeight: 500 }}>{k.name}</div>
-                            <div style={{ fontSize: 10, color: '#5a5878', marginTop: 2 }}>{k.owner}</div>
+                            <div style={{ fontSize: 10, color: '#6B5254', marginTop: 2 }}>{k.owner}</div>
                           </div>
                         </div>
                       ))}
@@ -435,9 +435,9 @@ function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
         </>
       )}
 
-      <div className="flex gap-4" style={{ marginTop: 18, fontSize: 11, color: '#6b6987' }}>
-        {[['#4b4a9e', 'Project'], ['#e4e2f7', 'Deliverable'], ['#dcf3e8', 'Assigned package'], ['#fdeedd', 'Unassigned package']].map(([c, l]) => (
-          <span key={l} className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 3, background: c, display: 'inline-block', border: '1px solid #cfcbee' }} />{l}</span>
+      <div className="flex gap-4" style={{ marginTop: 18, fontSize: 11, color: '#7A6063' }}>
+        {[['#722F37', 'Project'], ['#E8DCC6', 'Deliverable'], ['#DDE7D0', 'Assigned package'], ['#F5E3C8', 'Unassigned package']].map(([c, l]) => (
+          <span key={l} className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 3, background: c, display: 'inline-block', border: '1px solid #D8CAB2' }} />{l}</span>
         ))}
       </div>
     </div>
@@ -446,17 +446,17 @@ function OrgChart({ wbs, selectedCode, onSelect, onToggle }: {
 
 function Breadcrumb({ steps }: { steps: string[] }) {
   return (
-    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#6b6987', marginBottom: 20 }}>
+    <div className="flex items-center gap-2" style={{ fontSize: 12, color: '#7A6063', marginBottom: 20 }}>
       {steps.map((s, i) => (
         <span key={s} className="flex items-center gap-2">
           {i > 0 && <span>›</span>}
-          <span style={{ color: i === steps.length - 1 ? '#23223a' : '#6b6987' }}>{s}</span>
+          <span style={{ color: i === steps.length - 1 ? '#2E1A1D' : '#7A6063' }}>{s}</span>
         </span>
       ))}
     </div>
   )
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e4e2f7', borderRadius: 6, padding: '18px 20px' }
-const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#4b4a9e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
-const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#38375a', border: '1px solid #d9d6ee', borderRadius: 4, fontSize: 13, cursor: 'pointer' }
+const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #E8DCC6', borderRadius: 6, padding: '18px 20px' }
+const primaryBtn: React.CSSProperties = { padding: '9px 20px', background: '#722F37', color: '#fff', border: 'none', borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: 'pointer' }
+const secondaryBtn: React.CSSProperties = { padding: '9px 16px', background: '#fff', color: '#4A2B2F', border: '1px solid #CDBFAB', borderRadius: 4, fontSize: 13, cursor: 'pointer' }

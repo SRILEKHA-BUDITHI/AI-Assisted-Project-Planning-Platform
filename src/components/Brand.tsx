@@ -24,7 +24,7 @@ export function BrandMark({ size = 32, inverted = false }: { size?: number; inve
 export function BrandName({ inverted = false, className }: { inverted?: boolean; className?: string }) {
   return (
     <span className={cx('font-bold tracking-[-0.01em]', className)}>
-      Nirn<span className={inverted ? 'text-[#c9c6ee]' : 'text-primary'}>AI</span>n
+      Nirn<span className={inverted ? 'text-[#E8C9C4]' : 'text-primary'}>AI</span>n
     </span>
   )
 }

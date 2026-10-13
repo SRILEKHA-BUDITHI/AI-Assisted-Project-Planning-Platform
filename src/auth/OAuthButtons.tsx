@@ -66,10 +66,10 @@ export default function OAuthButtons({ next, disabled, onPendingChange, onError 
 
 export function Divider({ label = 'or' }: { label?: string }) {
   return (
-    <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.08em] text-[#9b98b5]" role="separator">
-      <span className="h-px flex-1 bg-[#e4e2f7]" />
+    <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.08em] text-[#A99A8E]" role="separator">
+      <span className="h-px flex-1 bg-[#E8DCC6]" />
       {label}
-      <span className="h-px flex-1 bg-[#e4e2f7]" />
+      <span className="h-px flex-1 bg-[#E8DCC6]" />
     </div>
   )
 }

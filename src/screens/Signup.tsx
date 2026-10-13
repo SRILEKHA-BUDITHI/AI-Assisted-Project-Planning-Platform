@@ -178,7 +178,7 @@ export default function Signup() {
         <Button type="submit" size="lg" block loading={submitting} disabled={oauthPending} className="mt-2">
           Create account
         </Button>
-        <p className="mt-4 text-center text-xs leading-5 text-[#7d7a99]">
+        <p className="mt-4 text-center text-xs leading-5 text-[#8F7B74]">
           By creating an account you agree to your organization&apos;s acceptable use policy.
         </p>
       </form>
