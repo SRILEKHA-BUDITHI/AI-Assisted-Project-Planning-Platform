@@ -44,3 +44,13 @@ Local testing needs Docker Desktop (`supabase start`, `supabase test db`). Witho
 | viewer | non-confidential | no | — |
 
 The backend runs every user request as the `authenticated` role with the user's JWT claims, so these policies are the real authorization layer.
+
+## Auth providers and email
+
+- **Google sign-in** is enabled in `config.toml`. Its client ID and secret are read from the environment
+  (`SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID`, `SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET`), kept in the git-ignored
+  `supabase/.env`, and applied with `supabase config push`. Redirect URI registered in Google Cloud:
+  `https://<project-ref>.supabase.co/auth/v1/callback`.
+- **Branded emails** (`templates/`) are ready but not wired into `config.toml`: the free plan's default mailer rejects
+  template changes. After configuring custom SMTP (`[auth.email.smtp]`), add back the
+  `[auth.email.template.confirmation|recovery|email_change|invite|magic_link]` sections pointing at these files.
