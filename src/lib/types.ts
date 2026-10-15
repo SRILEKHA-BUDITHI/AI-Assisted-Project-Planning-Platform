@@ -101,11 +101,11 @@ export interface Project {
   priority: Priority
   methodology: Methodology
   visibility: Visibility
-  /** ISO date `YYYY-MM-DD`. */
-  startDate: string
-  /** ISO date `YYYY-MM-DD`. */
-  targetEndDate: string
-  budgetCents: number
+  /** ISO date `YYYY-MM-DD`; null for drafts that don't have one yet. */
+  startDate: string | null
+  /** ISO date `YYYY-MM-DD`; null for drafts that don't have one yet. */
+  targetEndDate: string | null
+  budgetCents: number | null
   currency: string
   status: ProjectStatus
   currentStep: ProjectStep
@@ -124,9 +124,9 @@ export interface ProjectCreate {
   priority: Priority
   methodology: Methodology
   visibility: Visibility
-  startDate: string
-  targetEndDate: string
-  budgetCents: number
+  startDate: string | null
+  targetEndDate: string | null
+  budgetCents: number | null
   currency: string
   status: ProjectStatus
   currentStep: ProjectStep
