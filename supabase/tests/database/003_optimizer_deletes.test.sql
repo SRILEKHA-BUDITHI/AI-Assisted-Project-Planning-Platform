@@ -14,9 +14,9 @@ select (select org_id from public.organization_members where user_id = '00000000
 insert into public.projects (id, org_id, name, created_by)
 select '30000000-0000-0000-0000-000000000001', org, 'Planned', '00000000-0000-0000-0000-0000000000e1' from t;
 insert into public.employees (id, org_id, full_name)
-select '40000000-0000-0000-0000-000000000001', org, 'Assigned Person' from t
+select '40000000-0000-0000-0000-000000000001'::uuid, org, 'Assigned Person' from t
 union all
-select '40000000-0000-0000-0000-000000000002', org, 'Other Person' from t;
+select '40000000-0000-0000-0000-000000000002'::uuid, org, 'Other Person' from t;
 insert into public.wbs_nodes (id, project_id, level, name) values
   ('50000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', 1, 'Root');
 insert into public.wbs_nodes (id, project_id, parent_id, level, name, duration_days) values
