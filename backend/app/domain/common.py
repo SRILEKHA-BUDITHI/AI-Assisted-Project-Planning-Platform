@@ -99,6 +99,39 @@ class NotificationLevel(StrEnum):
     ALERT = "alert"
 
 
+# --- public.solver_status
+class SolverStatus(StrEnum):
+    QUEUED = "queued"
+    RUNNING = "running"
+    OPTIMAL = "optimal"
+    FEASIBLE = "feasible"
+    INFEASIBLE = "infeasible"
+    TIMEOUT = "timeout"
+    FAILED = "failed"
+
+
+# --- public.dependency_type
+class DependencyType(StrEnum):
+    FS = "FS"
+    SS = "SS"
+    FF = "FF"
+    SF = "SF"
+
+
+# --- public.constraint_mode
+class ConstraintMode(StrEnum):
+    HARD = "hard"
+    SOFT = "soft"
+
+
+# --- public.recommendation_type
+class RecommendationType(StrEnum):
+    REASSIGNMENT = "reassignment"
+    SCHEDULE_CHANGE = "schedule_change"
+    HIRE = "hire"
+    NOTE = "note"
+
+
 class Page[T](CamelModel):
     items: list[T]
     next_cursor: str | None = None

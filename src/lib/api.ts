@@ -8,14 +8,23 @@ export class ApiError extends Error {
   readonly detail: string
   /** Field-level validation messages keyed by camelCase field name, when the server provides them. */
   readonly fieldErrors: Record<string, string>
+  /** Problem-detail extension members (anything beyond type/title/status/detail/instance/errors). */
+  readonly extensions: Record<string, unknown>
 
-  constructor(status: number, title: string, detail: string, fieldErrors: Record<string, string> = {}) {
+  constructor(
+    status: number,
+    title: string,
+    detail: string,
+    fieldErrors: Record<string, string> = {},
+    extensions: Record<string, unknown> = {},
+  ) {
     super(detail || title)
     this.name = 'ApiError'
     this.status = status
     this.title = title
     this.detail = detail
     this.fieldErrors = fieldErrors
+    this.extensions = extensions
   }
 }
 
@@ -41,6 +50,8 @@ const DEFAULT_TITLES: Record<number, string> = {
   502: 'Service unavailable',
   503: 'Service unavailable',
 }
+
+const PROBLEM_KEYS = new Set(['type', 'title', 'status', 'detail', 'instance', 'errors'])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -86,7 +97,8 @@ async function toApiError(response: Response): Promise<ApiError> {
     fieldErrors = { ...extractFieldErrors(payload.detail), ...fieldErrors }
     detail = 'Some fields are invalid.'
   }
-  return new ApiError(response.status, title, detail, fieldErrors)
+  const extensions = Object.fromEntries(Object.entries(payload).filter(([key]) => !PROBLEM_KEYS.has(key)))
+  return new ApiError(response.status, title, detail, fieldErrors, extensions)
 }
 
 async function accessToken(): Promise<string | null> {

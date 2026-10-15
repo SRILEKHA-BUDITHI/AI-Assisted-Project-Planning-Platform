@@ -44,6 +44,12 @@ class Settings(BaseSettings):
     cors_origins: Annotated[list[str], NoDecode] = Field(default_factory=list)
     enable_docs: bool | None = None
 
+    # Optimizer (OR-Tools CP-SAT, runs in-process off the event loop).
+    optimizer_time_limit_s: float = Field(default=20.0, gt=0, le=300)
+    optimizer_workers: int = Field(default=4, ge=1, le=32)
+    # Queued/running runs older than this are treated as orphaned (server restarted).
+    optimizer_stale_after_s: int = Field(default=180, ge=30)
+
     # Injected by Railway at build/deploy time.
     railway_git_commit_sha: str | None = None
 
@@ -71,6 +77,13 @@ class Settings(BaseSettings):
     @classmethod
     def _upper_level(cls, value: str) -> str:
         return value.upper()
+
+    @model_validator(mode="after")
+    def _stale_after_exceeds_solve(self) -> Settings:
+        # A run takes at most ~2x the time limit (solve + infeasibility explanation).
+        if self.optimizer_stale_after_s <= 2 * self.optimizer_time_limit_s:
+            raise ValueError("OPTIMIZER_STALE_AFTER_S must exceed 2 x OPTIMIZER_TIME_LIMIT_S")
+        return self
 
     @model_validator(mode="after")
     def _require_in_production(self) -> Settings:
