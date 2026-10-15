@@ -150,7 +150,7 @@ export interface DashboardSummary {
 export interface Member {
   userId: string
   fullName: string | null
-  email: string
+  email: string | null
   role: OrgRole
 }
 
