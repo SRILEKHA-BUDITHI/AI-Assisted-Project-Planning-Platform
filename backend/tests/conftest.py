@@ -251,13 +251,12 @@ class FakeProjects:
         pid = uuid.uuid4()
         now = datetime.now(UTC) + timedelta(microseconds=len(self.s.projects))
         pm = self.s.profiles.get(values["pm_user_id"]) if values.get("pm_user_id") else None
+        values = {"status": ProjectStatus.DRAFT, "current_step": "create", **values}
         self.s.projects[pid] = Project(
             id=pid,
             org_id=org_id,
             code=f"P-{self.s.next_code:03d}",
             pm_name=pm.full_name if pm else None,
-            status=ProjectStatus.DRAFT,
-            current_step="create",  # type: ignore[arg-type]
             progress_pct=0,
             created_by=created_by,
             created_at=now,
