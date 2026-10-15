@@ -164,3 +164,37 @@ export interface AppNotification {
   readAt: string | null
   createdAt: string
 }
+
+/* ───────────────────────────── Optimization ───────────────────────────── */
+
+export type RunStatus = 'queued' | 'running' | 'optimal' | 'feasible' | 'infeasible' | 'timeout' | 'failed'
+
+export interface RunKpi {
+  label: string
+  value: string
+  sub?: string
+}
+
+export interface RunResult {
+  kpis: RunKpi[]
+  reassignments: { task: string; current: string; recommended: string; reason: string }[]
+  scheduleChanges: { wbs: string; name: string; original: string; optimized: string; delta: string; reason: string }[]
+  utilization: { name: string; before: number; after: number }[]
+}
+
+export interface OptimizationRun {
+  id: string
+  projectId: string
+  status: RunStatus
+  solver: string | null
+  solveSeconds: number | null
+  error: string | null
+  iis: { name: string; explanation: string }[] | null
+  result: RunResult | null
+  createdAt: string
+  startedAt: string | null
+  finishedAt: string | null
+}
+
+/** What the optimizer needs before it can run (from the 422 problem's `missing` extension). */
+export type OptimizerInput = 'workPackages' | 'team'

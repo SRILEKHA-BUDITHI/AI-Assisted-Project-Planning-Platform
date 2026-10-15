@@ -5,12 +5,13 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { apiFetch } from './api'
+import { apiFetch, isApiError } from './api'
 import type {
   AppNotification,
   DashboardSummary,
   Me,
   Member,
+  OptimizationRun,
   Page,
   Project,
   ProjectCreate,
@@ -33,6 +34,7 @@ export const queryKeys = {
   dashboard: (orgId: string) => ['orgs', orgId, 'dashboard'] as const,
   members: (orgId: string) => ['orgs', orgId, 'members'] as const,
   notifications: ['notifications', { unread: true }] as const,
+  latestRun: (projectId: string) => ['projects', projectId, 'optimization', 'latest'] as const,
 }
 
 function projectListPath(orgId: string, filters: ProjectFilters, cursor: string | null): string {
@@ -156,6 +158,43 @@ export function useDeleteProject() {
     onSuccess: (_data, { projectId, orgId }) => {
       qc.removeQueries({ queryKey: queryKeys.project(projectId) })
       return invalidate(orgId)
+    },
+  })
+}
+
+const RUN_POLL_MS = 2000
+
+function runPath(projectId: string, suffix = ''): string {
+  return `/api/v1/projects/${encodeURIComponent(projectId)}/optimization/runs${suffix}`
+}
+
+/** Latest optimization run for a project (`null` when none yet); polls while it is queued or running. */
+export function useLatestRun(projectId: string) {
+  return useQuery({
+    queryKey: queryKeys.latestRun(projectId),
+    queryFn: async ({ signal }) => {
+      try {
+        return await apiFetch<OptimizationRun>(runPath(projectId, '/latest'), { signal })
+      } catch (error) {
+        if (isApiError(error) && error.status === 404) return null
+        throw error
+      }
+    },
+    refetchInterval: (query) => {
+      const status = query.state.data?.status
+      return status === 'queued' || status === 'running' ? RUN_POLL_MS : false
+    },
+  })
+}
+
+export function useStartRun(projectId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => apiFetch<OptimizationRun>(runPath(projectId), { method: 'POST', json: {} }),
+    onSuccess: (run) => queryClient.setQueryData(queryKeys.latestRun(projectId), run),
+    onError: (error) => {
+      // Someone else already started one: show it.
+      if (isApiError(error) && error.status === 409) void queryClient.invalidateQueries({ queryKey: queryKeys.latestRun(projectId) })
     },
   })
 }

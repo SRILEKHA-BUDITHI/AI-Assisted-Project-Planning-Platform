@@ -21,6 +21,7 @@ from app.core.middleware import (
     SecurityHeadersMiddleware,
 )
 from app.core.security import TokenVerifier
+from app.jobs.optimizer import OptimizationRunner, engine_store
 
 logger = logging.getLogger("app")
 
@@ -35,9 +36,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "starting",
             extra={"environment": settings.environment, "version": settings.version},
         )
+        runner: OptimizationRunner = app.state.optimizer
+        await runner.recover_stale()
         try:
             yield
         finally:
+            await runner.shutdown()
             engine = app.state.engine
             if engine is not None:
                 await engine.dispose()
@@ -56,6 +60,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.engine = create_engine(settings)
     app.state.token_verifier = TokenVerifier.from_settings(settings)
+    app.state.optimizer = OptimizationRunner(
+        engine_store(app.state.engine) if app.state.engine is not None else None, settings
+    )
     if app.state.engine is None:
         logger.warning("DATABASE_URL is not set; database endpoints will return 503")
     if app.state.token_verifier is None:

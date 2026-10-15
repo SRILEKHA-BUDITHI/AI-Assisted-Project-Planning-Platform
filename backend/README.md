@@ -24,7 +24,9 @@ app/
                      logging (JSON), middleware (request id, access log, security headers),
                      pagination (keyset cursors)
   api/deps.py        repository providers (tests override these)
-  api/v1/            routers: me, orgs, projects, dashboard, notifications, health
+  api/v1/            routers: me, orgs, projects, dashboard, notifications, optimization, health
+  optimization/      pure CP-SAT optimizer (model, baseline, solver, explanations)
+  jobs/              in-process background worker for optimization runs
   domain/            pydantic schemas (camelCase JSON) + Postgres enum mirrors
   repositories/      SQLAlchemy Core queries against the existing tables (tables.py)
 tests/               unit + API tests (no database needed)
@@ -81,10 +83,29 @@ All endpoints are under `/api/v1` except health. JSON uses camelCase. Errors are
 | GET | `/api/v1/orgs/{orgId}/dashboard` | `{totalProjects, onTrack, atRiskOrDelayed, totalBudgetCents, createdThisMonth}` |
 | GET | `/api/v1/notifications` | `unread=true/false`, `limit`, `cursor` |
 | POST | `/api/v1/notifications/{id}/read` | Idempotent. Returns the notification. |
+| POST | `/api/v1/projects/{projectId}/optimization/runs` | 202 + `OptimizationRun` (`queued`), solved in the background. 403 not a writer, 404 project not visible, 409 a run is already queued/running, 422 nothing to optimize (`missing: ["workPackages", "team"]`). |
+| GET | `/api/v1/projects/{projectId}/optimization/runs/latest` | Latest run, or 404 when there are none |
+| GET | `/api/v1/projects/{projectId}/optimization/runs/{runId}` | One run |
 
 Error mapping: RLS violation / `42501` → 403, trigger `P0001` → 422 (with the trigger's
 message), `23505` → 409, `23514`/`23503`/`23502`/`22xxx` → 422, missing row → 404,
 DB unreachable / pool exhausted / statement timeout → 503.
+
+## Optimizer
+
+`app/optimization/` is a pure OR-Tools CP-SAT package (no DB or FastAPI imports):
+`model.py` (input/output + the frozen `input_snapshot` format), `baseline.py`
+(forward-pass "before" plan), `solver.py` (model, status mapping, infeasibility
+explanation via assumption literals; the module docstring documents the formulation
+and its simplifications) and `explain.py` (the UI `result` payload and DB rows).
+
+`POST .../optimization/runs` loads the plan under the caller's RLS session, freezes it
+into `input_snapshot` and commits. A background task then solves it in-process
+(`app/jobs/optimizer.py`, `asyncio.to_thread`) and writes the outcome, plus
+`planned_assignments` and `recommendations`, on a service connection. On startup,
+and before answering 409, runs stuck in queued/running for longer than
+`OPTIMIZER_STALE_AFTER_S` are marked failed, because a restart orphans them. Tuning:
+`OPTIMIZER_TIME_LIMIT_S`, `OPTIMIZER_WORKERS` (see `.env.example`).
 
 ## Deploy (Railway)
 
