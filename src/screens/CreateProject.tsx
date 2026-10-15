@@ -64,17 +64,22 @@ function formatBudgetInput(cents: number): string {
   return fraction ? `${formatNumber(whole)}.${String(fraction).padStart(2, '0')}` : formatNumber(whole)
 }
 
-function validate(form: FormState): FieldErrors {
+/** A draft only needs a name; anything else filled in must still be valid. */
+function validate(form: FormState, intent: Intent): FieldErrors {
   const errors: FieldErrors = {}
+  const required = intent === 'continue'
   const name = form.name.trim()
   if (!name) errors.name = 'Give the project a name.'
   else if (name.length > 200) errors.name = 'Keep the name under 200 characters.'
-  if (!form.description.trim()) errors.description = 'Describe the project so AI has context during intake.'
-  if (!form.startDate) errors.startDate = 'Choose a start date.'
-  if (!form.targetEndDate) errors.targetEndDate = 'Choose a target end date.'
-  else if (form.startDate && form.targetEndDate < form.startDate) errors.targetEndDate = 'End date must be on or after the start date.'
+  if (required && !form.description.trim()) errors.description = 'Describe the project so AI has context during intake.'
+  if (required && !form.startDate) errors.startDate = 'Choose a start date.'
+  if (!form.targetEndDate) {
+    if (required) errors.targetEndDate = 'Choose a target end date.'
+  } else if (form.startDate && form.targetEndDate < form.startDate) {
+    errors.targetEndDate = 'End date must be on or after the start date.'
+  }
   if (!form.budget.trim()) {
-    errors.budget = 'Enter the total budget.'
+    if (required) errors.budget = 'Enter the total budget.'
   } else {
     const cents = parseBudgetToCents(form.budget)
     if (cents === null) errors.budget = 'Enter an amount like 375,000 or 375000.50.'
@@ -130,7 +135,7 @@ export default function CreateProject() {
     visibility: 'internal',
   }))
   const [errors, setErrors] = useState<FieldErrors>({})
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState<Intent | null>(null)
   const [pendingIntent, setPendingIntent] = useState<Intent | null>(null)
   const [serverError, setServerError] = useState<{ title: string; detail: string } | null>(null)
   const fieldRefs = useRef<Partial<Record<FieldName, HTMLElement | null>>>({})
@@ -150,7 +155,7 @@ export default function CreateProject() {
     const next = { ...form, [key]: value }
     setForm(next)
     // After the first submit attempt, re-validate live so errors clear as they're fixed.
-    if (submitted) setErrors(validate(next))
+    if (submitted) setErrors(validate(next, submitted))
   }
 
   function bind(name: FieldName) {
@@ -167,9 +172,9 @@ export default function CreateProject() {
 
   async function submit(intent: Intent) {
     if (createProject.isPending) return
-    setSubmitted(true)
+    setSubmitted(intent)
     setServerError(null)
-    const found = validate(form)
+    const found = validate(form, intent)
     setErrors(found)
     const firstInvalid = FIELD_ORDER.find((f) => found[f])
     if (firstInvalid) {
@@ -187,9 +192,9 @@ export default function CreateProject() {
       priority: form.priority,
       methodology: form.methodology,
       visibility: form.visibility,
-      startDate: form.startDate,
-      targetEndDate: form.targetEndDate,
-      budgetCents: parseBudgetToCents(form.budget) ?? 0,
+      startDate: form.startDate || null,
+      targetEndDate: form.targetEndDate || null,
+      budgetCents: form.budget.trim() ? parseBudgetToCents(form.budget) : null,
       currency: CURRENCY,
       status: intent === 'draft' ? 'draft' : 'planning',
       currentStep: intent === 'draft' ? 'create' : 'intake',

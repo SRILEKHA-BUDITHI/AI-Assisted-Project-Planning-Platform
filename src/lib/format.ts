@@ -21,7 +21,9 @@ function moneyFormatter(currency: string, compact: boolean): Intl.NumberFormat {
 }
 
 /** Formats integer cents as currency, e.g. `24000000` → `$240,000` (or `$240K` when compact). */
-export function formatMoney(cents: number, currency = 'USD', options: { compact?: boolean } = {}): string {
+/** Formats cents as currency; drafts without a budget render as an em dash. */
+export function formatMoney(cents: number | null | undefined, currency = 'USD', options: { compact?: boolean } = {}): string {
+  if (cents == null) return '—'
   return moneyFormatter(currency, options.compact ?? false).format(cents / 100)
 }
 

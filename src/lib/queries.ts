@@ -76,7 +76,8 @@ export function useAtRiskProjects(orgId: string, limit = 5) {
         ),
       )
       return [...atRisk.items, ...delayed.items]
-        .sort((a, b) => a.targetEndDate.localeCompare(b.targetEndDate))
+        // Soonest due first; projects without a target date go last.
+        .sort((a, b) => (a.targetEndDate ?? '9999-12-31').localeCompare(b.targetEndDate ?? '9999-12-31'))
         .slice(0, limit)
     },
   })
