@@ -144,7 +144,8 @@ max_catalogs = 2
 
 # Store vector embeddings in S3 for large and durable datasets
 [storage.vector]
-enabled = true
+# Pro plan only; enabling it on the free plan makes `supabase config push` fail.
+enabled = false
 max_buckets = 10
 max_indexes = 5
 
@@ -242,27 +243,12 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Branded templates. Links use `token_hash` + /auth/confirm (not the PKCE
-# ?code= redirect) so they work when opened on a different device or browser.
-[auth.email.template.confirmation]
-subject = "Confirm your NirnAIn account"
-content_path = "./supabase/templates/confirmation.html"
-
-[auth.email.template.recovery]
-subject = "Reset your NirnAIn password"
-content_path = "./supabase/templates/recovery.html"
-
-[auth.email.template.email_change]
-subject = "Confirm your new NirnAIn email"
-content_path = "./supabase/templates/email_change.html"
-
-[auth.email.template.invite]
-subject = "You're invited to NirnAIn"
-content_path = "./supabase/templates/invite.html"
-
-[auth.email.template.magic_link]
-subject = "Your NirnAIn sign-in link"
-content_path = "./supabase/templates/magic_link.html"
+# Branded email templates live in ./supabase/templates/ (token_hash links to
+# /auth/confirm, which work across devices). They are not wired up here yet:
+# Supabase rejects template changes on the free plan's default mailer, which
+# would block every `supabase config push`. Re-add the
+# [auth.email.template.*] sections once custom SMTP is configured
+# (see supabase/README.md).
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
@@ -352,7 +338,7 @@ email_optional = false
 
 # Google sign-in. Secret comes from env; flip `enabled` once the OAuth client exists.
 [auth.external.google]
-enabled = false
+enabled = true
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 skip_nonce_check = true
