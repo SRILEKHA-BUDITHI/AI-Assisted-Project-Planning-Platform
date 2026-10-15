@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import date, datetime
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import Field, StringConstraints, model_validator
 
@@ -75,6 +75,10 @@ class ProjectCreate(InputModel):
     target_end_date: date | None = None
     budget_cents: BudgetCents | None = None
     currency: Currency = "USD"
+    # A new project starts as a draft ("Save Draft") or straight into planning
+    # ("Continue to AI Intake"); later statuses are reached via PATCH.
+    status: Literal[ProjectStatus.DRAFT, ProjectStatus.PLANNING] = ProjectStatus.DRAFT
+    current_step: ProjectStep = ProjectStep.CREATE
 
     @model_validator(mode="after")
     def _validate(self) -> ProjectCreate:

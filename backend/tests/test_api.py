@@ -115,6 +115,47 @@ def test_create_and_get_project(client: TestClient, store: Store, auth: Auth) ->
     assert r.json()["name"] == "CRM Migration"
 
 
+def test_create_project_with_the_web_forms_payload(
+    client: TestClient, store: Store, auth: Auth
+) -> None:
+    """Exactly what src/screens/CreateProject.tsx sends for "Continue to AI Intake"."""
+    user, org = _setup(store)
+    payload = {
+        "name": "Enterprise Data Platform",
+        "description": "Consolidate reporting",
+        "type": "technology",
+        "department": "Engineering",
+        "sponsor": None,
+        "pmUserId": str(user),
+        "priority": "high",
+        "methodology": "waterfall",
+        "visibility": "internal",
+        "startDate": "2026-11-02",
+        "targetEndDate": "2027-06-30",
+        "budgetCents": 37_500_000,
+        "currency": "USD",
+        "status": "planning",
+        "currentStep": "intake",
+    }
+    r = client.post(f"/api/v1/orgs/{org}/projects", json=payload, headers=auth(user))
+    assert r.status_code == 201, r.text
+    assert r.json()["status"] == "planning"
+    assert r.json()["currentStep"] == "intake"
+
+    draft = {**payload, "name": "Draft only", "status": "draft", "currentStep": "create"}
+    r = client.post(f"/api/v1/orgs/{org}/projects", json=draft, headers=auth(user))
+    assert r.status_code == 201, r.text
+    assert r.json()["status"] == "draft"
+
+
+def test_create_project_cannot_start_in_a_later_status(
+    client: TestClient, store: Store, auth: Auth
+) -> None:
+    user, org = _setup(store)
+    r = _create(client, auth, user, org, status="completed")
+    assert r.status_code == 422
+
+
 def test_create_project_validation(client: TestClient, store: Store, auth: Auth) -> None:
     user, org = _setup(store)
     bad = [
