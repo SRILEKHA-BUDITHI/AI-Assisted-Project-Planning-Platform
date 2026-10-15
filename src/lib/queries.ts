@@ -110,7 +110,8 @@ export function useMembers(orgId: string) {
 export function useNotifications() {
   return useQuery({
     queryKey: queryKeys.notifications,
-    queryFn: ({ signal }) => apiFetch<AppNotification[]>('/api/v1/notifications?unread=true', { signal }),
+    // The API returns a cursor page ({ items, nextCursor }); the dashboard shows the first page.
+    queryFn: async ({ signal }) => (await apiFetch<Page<AppNotification>>('/api/v1/notifications?unread=true', { signal })).items,
     refetchInterval: 60_000,
   })
 }
