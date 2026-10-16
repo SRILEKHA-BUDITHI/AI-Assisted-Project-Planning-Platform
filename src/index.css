@@ -109,3 +109,12 @@ body {
   .opt-actions, .opt-actions-group { flex-direction: column; align-items: stretch; }
   .opt-actions button, .opt-head-actions button { width: 100%; }
 }
+
+/* Dashboard: side cards move below the tables when the main area is narrow
+   (e.g. laptop width with the AI chat panel open), so the projects table
+   keeps room for all its columns. Container query = based on space, not screen. */
+.dash-wrap { container-type: inline-size; }
+.dash-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; }
+@container (max-width: 1000px) {
+  .dash-layout { grid-template-columns: minmax(0, 1fr); }
+}
