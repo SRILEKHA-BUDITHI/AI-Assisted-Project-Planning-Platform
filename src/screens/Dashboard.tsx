@@ -52,7 +52,7 @@ export default function Dashboard() {
   const activeCount = summary.data ? summary.data.totalProjects : null
 
   return (
-    <div style={{ padding: '32px 36px', maxWidth: 1200 }}>
+    <div className="dash-wrap" style={{ padding: '32px 36px', maxWidth: 1200 }}>
       {/* Header */}
       <div className="flex items-center justify-between" style={{ marginBottom: 28 }}>
         <div>
@@ -79,7 +79,7 @@ export default function Dashboard() {
       ) : (
         <>
           <KpiRow summary={summary.data} projects={portfolio.data?.pages[0]?.items} />
-          <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: 20 }}>
+          <div className="dash-layout">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
               <ProjectsTable orgId={org.id} />
               <DeliveryHealthCard query={portfolio} />

@@ -20,13 +20,9 @@ export default function AIChat({
   onClose: () => void
   inputRef?: Ref<HTMLInputElement>
 }) {
-  const [messages, setMessages] = useState<Message[]>(() => [
-    {
-      id: 0,
-      role: 'ai',
-      text: `Hi${firstName ? ` ${firstName}` : ''}, I'm NirnAIn AI. You're on ${contextLabel}. Ask me anything about your project plan.`,
-    },
-  ])
+  // The greeting is derived on every render so it always names the current page.
+  const greeting = `Hi${firstName ? ` ${firstName}` : ''}, I'm NirnAIn AI. You're on ${contextLabel}. Ask me anything about your project plan.`
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const nextId = useRef(1)
@@ -102,6 +98,10 @@ export default function AIChat({
 
       <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
         <div role="log" aria-live="polite" aria-label="Conversation" className="flex flex-col gap-3">
+          <div className="max-w-[88%] self-start rounded-xl rounded-bl-[3px] bg-muted px-3 py-2 text-[13px] leading-[1.45] text-foreground">
+            <span className="sr-only">NirnAIn AI: </span>
+            {greeting}
+          </div>
           {messages.map((m) => (
             <div
               key={m.id}
@@ -119,7 +119,7 @@ export default function AIChat({
             <div className="self-start rounded-xl bg-muted px-3 py-2 text-[13px] text-muted-foreground">Thinking…</div>
           )}
         </div>
-        {messages.length === 1 && (
+        {messages.length === 0 && (
           <ul aria-label="Suggested questions" className="mt-1 flex flex-col gap-2">
             {ASSISTANT_SUGGESTIONS.map((s) => (
               <li key={s}>
