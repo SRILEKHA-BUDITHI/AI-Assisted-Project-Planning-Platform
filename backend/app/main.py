@@ -21,6 +21,8 @@ from app.core.middleware import (
     SecurityHeadersMiddleware,
 )
 from app.core.security import TokenVerifier
+from app.jobs.intake import IntakeRunner
+from app.jobs.intake import engine_store as intake_engine_store
 from app.jobs.optimizer import OptimizationRunner, engine_store
 
 logger = logging.getLogger("app")
@@ -37,11 +39,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             extra={"environment": settings.environment, "version": settings.version},
         )
         runner: OptimizationRunner = app.state.optimizer
+        intaker: IntakeRunner = app.state.intaker
         await runner.recover_stale()
+        await intaker.recover_stale(settings.intake_stale_after_s)
         try:
             yield
         finally:
             await runner.shutdown()
+            await intaker.shutdown()
             engine = app.state.engine
             if engine is not None:
                 await engine.dispose()
@@ -63,10 +68,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.optimizer = OptimizationRunner(
         engine_store(app.state.engine) if app.state.engine is not None else None, settings
     )
+    app.state.intaker = IntakeRunner(
+        intake_engine_store(app.state.engine) if app.state.engine is not None else None, settings
+    )
     if app.state.engine is None:
         logger.warning("DATABASE_URL is not set; database endpoints will return 503")
     if app.state.token_verifier is None:
         logger.warning("SUPABASE_URL is not set; authenticated endpoints will return 503")
+    if settings.anthropic_api_key is None:
+        logger.warning("ANTHROPIC_API_KEY is not set; AI intake runs will fail")
 
     register_exception_handlers(app)
 

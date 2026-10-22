@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
+import { isApiError } from '@/lib/api'
+import { useLatestIntakeRun, useStartIntakeRun } from '@/lib/queries'
 import { useStepNav } from '@/lib/steps'
 
 const SAMPLE_TEXT = `Meeting Notes — Enterprise Data Platform Kickoff
@@ -30,12 +32,22 @@ OPEN ITEMS / UNKNOWNS
 export default function AIProjectIntake() {
   const nav = useStepNav()
   const navigate = useNavigate()
-  const [analyzing, setAnalyzing] = useState(false)
-  const [analyzed, setAnalyzed] = useState(false)
+  const { projectId = '' } = useParams()
+  const [text, setText] = useState(SAMPLE_TEXT)
+
+  const latest = useLatestIntakeRun(projectId)
+  const startRun = useStartIntakeRun(projectId)
+
+  const run = latest.data ?? null
+  const status = run?.status ?? null
+  const analyzing = startRun.isPending || status === 'queued' || status === 'running'
+  const analyzed = status === 'succeeded'
+  const failed = status === 'failed'
+  const startError = startRun.error && isApiError(startRun.error) ? startRun.error.message : null
+  const errorMessage = run?.error || startError
 
   function handleAnalyze() {
-    setAnalyzing(true)
-    setTimeout(() => { setAnalyzing(false); setAnalyzed(true) }, 1800)
+    if (!analyzing && text.trim()) startRun.mutate(text)
   }
 
   return (
@@ -55,7 +67,8 @@ export default function AIProjectIntake() {
           <div style={cardStyle}>
             <div style={sectionLabel}>Brainstorm / Meeting Notes</div>
             <textarea
-              defaultValue={SAMPLE_TEXT}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
               style={{
                 width: '100%',
                 minHeight: 320,
@@ -114,11 +127,16 @@ export default function AIProjectIntake() {
             <button onClick={() => navigate('/dashboard')} style={secondaryBtn}>← Back to Dashboard</button>
             <div className="flex items-center gap-10">
               {analyzed && (
-                <span style={{ fontSize: 13, color: '#4F7A4A', fontWeight: 500 }}>✓ Analysis complete — 6 sections extracted</span>
+                <span style={{ fontSize: 13, color: '#4F7A4A', fontWeight: 500 }}>
+                  ✓ Analysis complete — {run?.itemsExtracted ?? 0} items extracted
+                </span>
+              )}
+              {failed && errorMessage && (
+                <span style={{ fontSize: 13, color: '#A83A4A', fontWeight: 500, maxWidth: 320 }}>{errorMessage}</span>
               )}
               <button
                 onClick={handleAnalyze}
-                disabled={analyzing}
+                disabled={analyzing || !text.trim()}
                 style={{
                   padding: '10px 28px',
                   background: analyzing ? '#888' : '#722F37',
@@ -130,7 +148,7 @@ export default function AIProjectIntake() {
                   cursor: analyzing ? 'default' : 'pointer',
                 }}
               >
-                {analyzing ? 'Analyzing…' : analyzed ? 'Re-Analyze' : 'Analyze Project'}
+                {analyzing ? 'Analyzing…' : analyzed || failed ? 'Re-Analyze' : 'Analyze Project'}
               </button>
               {analyzed && (
                 <button onClick={() => nav('scope')} style={{ ...primaryBtn, background: '#4F7A4A' }}>

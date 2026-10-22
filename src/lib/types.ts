@@ -198,3 +198,58 @@ export interface OptimizationRun {
 
 /** What the optimizer needs before it can run (from the 422 problem's `missing` extension). */
 export type OptimizerInput = 'workPackages' | 'team'
+
+/* ───────────────────────────── AI Intake / Scope ───────────────────────────── */
+
+export type IntakeRunStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled'
+
+export interface IntakeRun {
+  id: string
+  projectId: string
+  status: IntakeRunStatus
+  model: string | null
+  itemsExtracted: number | null
+  error: string | null
+  createdAt: string
+  startedAt: string | null
+  finishedAt: string | null
+}
+
+export const SCOPE_CATEGORIES = [
+  'objective',
+  'requirement',
+  'deliverable',
+  'constraint',
+  'risk',
+  'missing_info',
+] as const
+export type ScopeCategory = (typeof SCOPE_CATEGORIES)[number]
+
+export const SCOPE_CATEGORY_LABELS: Record<ScopeCategory, string> = {
+  objective: 'Objectives',
+  requirement: 'Requirements',
+  deliverable: 'Deliverables',
+  constraint: 'Constraints',
+  risk: 'Risks',
+  missing_info: 'Missing Information',
+}
+
+export type ScopeItemStatus = 'pending' | 'accepted' | 'removed'
+
+export interface ScopeItem {
+  id: string
+  projectId: string
+  category: ScopeCategory
+  text: string
+  status: ScopeItemStatus
+  origin: 'ai' | 'manual'
+  confidence: number | null
+  sortOrder: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ScopeItemPatch {
+  text?: string
+  status?: ScopeItemStatus
+}
