@@ -9,6 +9,7 @@ import { apiFetch, isApiError } from './api'
 import type {
   AppNotification,
   DashboardSummary,
+  IntakeRun,
   Me,
   Member,
   OptimizationRun,
@@ -17,6 +18,8 @@ import type {
   ProjectCreate,
   ProjectStatus,
   ProjectUpdate,
+  ScopeItem,
+  ScopeItemPatch,
 } from './types'
 
 export interface ProjectFilters {
@@ -35,6 +38,8 @@ export const queryKeys = {
   members: (orgId: string) => ['orgs', orgId, 'members'] as const,
   notifications: ['notifications', { unread: true }] as const,
   latestRun: (projectId: string) => ['projects', projectId, 'optimization', 'latest'] as const,
+  latestIntakeRun: (projectId: string) => ['projects', projectId, 'intake', 'latest'] as const,
+  scopeItems: (projectId: string) => ['projects', projectId, 'scope-items'] as const,
 }
 
 function projectListPath(orgId: string, filters: ProjectFilters, cursor: string | null): string {
@@ -197,6 +202,69 @@ export function useStartRun(projectId: string) {
     onError: (error) => {
       // Someone else already started one: show it.
       if (isApiError(error) && error.status === 409) void queryClient.invalidateQueries({ queryKey: queryKeys.latestRun(projectId) })
+    },
+  })
+}
+
+const INTAKE_POLL_MS = 2000
+
+function intakeRunPath(projectId: string, suffix = ''): string {
+  return `/api/v1/projects/${encodeURIComponent(projectId)}/intake/runs${suffix}`
+}
+
+/** Latest AI intake run for a project (`null` when none yet); polls while it is queued or running. */
+export function useLatestIntakeRun(projectId: string) {
+  return useQuery({
+    queryKey: queryKeys.latestIntakeRun(projectId),
+    queryFn: async ({ signal }) => {
+      try {
+        return await apiFetch<IntakeRun>(intakeRunPath(projectId, '/latest'), { signal })
+      } catch (error) {
+        if (isApiError(error) && error.status === 404) return null
+        throw error
+      }
+    },
+    enabled: Boolean(projectId),
+    refetchInterval: (query) => {
+      const status = query.state.data?.status
+      return status === 'queued' || status === 'running' ? INTAKE_POLL_MS : false
+    },
+  })
+}
+
+export function useStartIntakeRun(projectId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (text: string) => apiFetch<IntakeRun>(intakeRunPath(projectId), { method: 'POST', json: { text } }),
+    onSuccess: (run) => {
+      queryClient.setQueryData(queryKeys.latestIntakeRun(projectId), run)
+      return queryClient.invalidateQueries({ queryKey: queryKeys.scopeItems(projectId) })
+    },
+    onError: (error) => {
+      // Someone else already started one: show it.
+      if (isApiError(error) && error.status === 409) void queryClient.invalidateQueries({ queryKey: queryKeys.latestIntakeRun(projectId) })
+    },
+  })
+}
+
+export function useScopeItems(projectId: string) {
+  return useQuery({
+    queryKey: queryKeys.scopeItems(projectId),
+    queryFn: ({ signal }) =>
+      apiFetch<ScopeItem[]>(`/api/v1/projects/${encodeURIComponent(projectId)}/scope-items`, { signal }),
+    enabled: Boolean(projectId),
+  })
+}
+
+export function useUpdateScopeItem(projectId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ itemId, patch }: { itemId: string; patch: ScopeItemPatch }) =>
+      apiFetch<ScopeItem>(`/api/v1/scope-items/${encodeURIComponent(itemId)}`, { method: 'PATCH', json: patch }),
+    onSuccess: (item) => {
+      queryClient.setQueryData<ScopeItem[]>(queryKeys.scopeItems(projectId), (prev) =>
+        prev ? prev.map((i) => (i.id === item.id ? item : i)) : prev,
+      )
     },
   })
 }

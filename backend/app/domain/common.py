@@ -132,6 +132,47 @@ class RecommendationType(StrEnum):
     NOTE = "note"
 
 
+# --- public.document_kind
+class DocumentKind(StrEnum):
+    TEXT = "text"
+    PDF = "pdf"
+    DOCX = "docx"
+    TRANSCRIPT = "transcript"
+    AUDIO = "audio"
+
+
+# --- public.job_status
+class JobStatus(StrEnum):
+    QUEUED = "queued"
+    RUNNING = "running"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+
+# --- public.scope_category
+class ScopeCategory(StrEnum):
+    OBJECTIVE = "objective"
+    REQUIREMENT = "requirement"
+    DELIVERABLE = "deliverable"
+    CONSTRAINT = "constraint"
+    RISK = "risk"
+    MISSING_INFO = "missing_info"
+
+
+# --- public.scope_status
+class ScopeStatus(StrEnum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REMOVED = "removed"
+
+
+# --- public.item_origin
+class ItemOrigin(StrEnum):
+    AI = "ai"
+    MANUAL = "manual"
+
+
 class Page[T](CamelModel):
     items: list[T]
     next_cursor: str | None = None

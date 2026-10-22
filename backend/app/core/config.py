@@ -50,6 +50,12 @@ class Settings(BaseSettings):
     # Queued/running runs older than this are treated as orphaned (server restarted).
     optimizer_stale_after_s: int = Field(default=180, ge=30)
 
+    # AI intake (Claude). Unset ANTHROPIC_API_KEY: runs stay queued, then fail at startup recovery.
+    anthropic_api_key: SecretStr | None = None
+    intake_model: str = "claude-opus-5-5"
+    # Queued/running runs older than this are treated as orphaned (server restarted).
+    intake_stale_after_s: int = Field(default=180, ge=30)
+
     # Injected by Railway at build/deploy time.
     railway_git_commit_sha: str | None = None
 

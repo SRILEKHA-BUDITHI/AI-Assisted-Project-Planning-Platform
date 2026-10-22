@@ -1,89 +1,92 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useParams } from 'react-router'
+import { isApiError } from '@/lib/api'
+import { useScopeItems, useUpdateScopeItem } from '@/lib/queries'
 import { useStepNav } from '@/lib/steps'
+import { SCOPE_CATEGORIES, SCOPE_CATEGORY_LABELS, type ScopeCategory, type ScopeItem } from '@/lib/types'
 
-interface Item { id: string; text: string; accepted: boolean; removed: boolean }
-
-const INITIAL: Record<string, Item[]> = {
-  Objectives: [
-    { id: 'o1', text: 'Consolidate 7 legacy BI systems into a unified data platform', accepted: true, removed: false },
-    { id: 'o2', text: 'Enable real-time dashboards for all business units by Q3 2025', accepted: true, removed: false },
-    { id: 'o3', text: 'Reduce reporting cycle time from 3 days to 4 hours', accepted: false, removed: false },
-  ],
-  Requirements: [
-    { id: 'r1', text: 'Ingestion layer supporting Salesforce, SAP, and 12 internal databases', accepted: true, removed: false },
-    { id: 'r2', text: 'Sub-5-second query response for standard reports', accepted: false, removed: false },
-    { id: 'r3', text: 'Role-based access control (RBAC) with full audit logging', accepted: false, removed: false },
-    { id: 'r4', text: 'GDPR and SOC 2 Type II compliance required', accepted: false, removed: false },
-  ],
-  Deliverables: [
-    { id: 'd1', text: 'Data ingestion pipeline (Phase 1: Salesforce, SAP)', accepted: false, removed: false },
-    { id: 'd2', text: 'Unified data warehouse schema and ETL processes', accepted: false, removed: false },
-    { id: 'd3', text: 'Self-service dashboard portal for 500+ users', accepted: false, removed: false },
-    { id: 'd4', text: 'Security and compliance documentation package', accepted: false, removed: false },
-  ],
-  Constraints: [
-    { id: 'c1', text: 'Budget fixed at $375,000 — no contingency buffer approved', accepted: false, removed: false },
-    { id: 'c2', text: 'Target go-live: Q3 2025 (September 30)', accepted: false, removed: false },
-    { id: 'c3', text: 'Only 2 data engineers available for first 3 months', accepted: false, removed: false },
-  ],
-  Risks: [
-    { id: 'rk1', text: 'SAP integration timeline uncertain — vendor dependency may delay Phase 1', accepted: false, removed: false },
-    { id: 'rk2', text: 'Infrastructure costs may exceed budget if cloud spend spikes', accepted: false, removed: false },
-    { id: 'rk3', text: 'End-user adoption risk — 300 users need training with no plan yet', accepted: false, removed: false },
-  ],
-  'Missing Information': [
-    { id: 'm1', text: 'Security review process and timeline not initiated', accepted: false, removed: false },
-    { id: 'm2', text: 'Disaster recovery SLA not defined', accepted: false, removed: false },
-    { id: 'm3', text: 'User training and change management plan not scoped', accepted: false, removed: false },
-  ],
-}
-
-const SECTION_COLOR: Record<string, string> = {
-  Objectives: '#DDE7D0',
-  Requirements: '#E3DCCB',
-  Deliverables: '#F5E3C8',
-  Constraints: '#F3D9D5',
-  Risks: '#F5E3C8',
-  'Missing Information': '#F3EADB',
+const SECTION_COLOR: Record<ScopeCategory, string> = {
+  objective: '#DDE7D0',
+  requirement: '#E3DCCB',
+  deliverable: '#F5E3C8',
+  constraint: '#F3D9D5',
+  risk: '#F5E3C8',
+  missing_info: '#F3EADB',
 }
 
 export default function ScopeReview() {
   const nav = useStepNav()
-  const [sections, setSections] = useState(INITIAL)
+  const { projectId = '' } = useParams()
+  const itemsQuery = useScopeItems(projectId)
+  const updateItem = useUpdateScopeItem(projectId)
   const [editing, setEditing] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
 
-  function accept(section: string, id: string) {
-    setSections(prev => ({
-      ...prev,
-      [section]: prev[section].map(i => i.id === id ? { ...i, accepted: true } : i)
-    }))
+  const items = itemsQuery.data ?? []
+  const sections = useMemo(() => {
+    const grouped = Object.fromEntries(SCOPE_CATEGORIES.map((c) => [c, [] as ScopeItem[]])) as Record<ScopeCategory, ScopeItem[]>
+    for (const item of items) grouped[item.category].push(item)
+    return grouped
+  }, [items])
+
+  function accept(id: string) {
+    updateItem.mutate({ itemId: id, patch: { status: 'accepted' } })
   }
-  function remove(section: string, id: string) {
-    setSections(prev => ({
-      ...prev,
-      [section]: prev[section].map(i => i.id === id ? { ...i, removed: true } : i)
-    }))
+  function remove(id: string) {
+    updateItem.mutate({ itemId: id, patch: { status: 'removed' } })
   }
-  function startEdit(id: string, text: string) { setEditing(id); setEditText(text) }
-  function saveEdit(section: string, id: string) {
-    setSections(prev => ({
-      ...prev,
-      [section]: prev[section].map(i => i.id === id ? { ...i, text: editText } : i)
-    }))
+  function startEdit(id: string, text: string) {
+    setEditing(id)
+    setEditText(text)
+  }
+  function saveEdit(id: string) {
+    updateItem.mutate({ itemId: id, patch: { text: editText } })
     setEditing(null)
   }
-
-  const acceptAll = () => {
-    const updated: Record<string, Item[]> = {}
-    Object.entries(sections).forEach(([k, v]) => {
-      updated[k] = v.map(i => ({ ...i, accepted: i.removed ? i.accepted : true }))
-    })
-    setSections(updated)
+  function acceptAll() {
+    for (const item of items) {
+      if (item.status === 'pending') updateItem.mutate({ itemId: item.id, patch: { status: 'accepted' } })
+    }
   }
 
-  const totalAccepted = Object.values(sections).flat().filter(i => i.accepted && !i.removed).length
-  const total = Object.values(sections).flat().filter(i => !i.removed).length
+  const visibleItems = items.filter((i) => i.status !== 'removed')
+  const totalAccepted = visibleItems.filter((i) => i.status === 'accepted').length
+  const total = visibleItems.length
+
+  if (itemsQuery.isPending) {
+    return (
+      <div style={{ padding: '32px 36px', maxWidth: 900 }}>
+        <Breadcrumb steps={['Dashboard', 'Create Project', 'AI Intake', 'Scope Review']} />
+        <div style={{ fontSize: 13, color: '#7A6063' }}>Loading scope items…</div>
+      </div>
+    )
+  }
+
+  if (itemsQuery.isError) {
+    return (
+      <div style={{ padding: '32px 36px', maxWidth: 900 }}>
+        <Breadcrumb steps={['Dashboard', 'Create Project', 'AI Intake', 'Scope Review']} />
+        <div style={{ fontSize: 13, color: '#A83A4A' }}>
+          {isApiError(itemsQuery.error) ? itemsQuery.error.message : 'Something went wrong loading scope items.'}
+        </div>
+      </div>
+    )
+  }
+
+  if (total === 0) {
+    return (
+      <div style={{ padding: '32px 36px', maxWidth: 900 }}>
+        <Breadcrumb steps={['Dashboard', 'Create Project', 'AI Intake', 'Scope Review']} />
+        <div style={cardStyle}>
+          <div style={{ fontSize: 14, marginBottom: 12 }}>No scope items yet.</div>
+          <div style={{ fontSize: 13, color: '#7A6063', marginBottom: 16 }}>
+            Go back to AI Intake and analyze your project notes to extract objectives, requirements, and risks.
+          </div>
+          <button onClick={() => nav('intake')} style={secondaryBtn}>← Back to AI Intake</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ padding: '32px 36px', maxWidth: 900 }}>
@@ -105,19 +108,21 @@ export default function ScopeReview() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {Object.entries(sections).map(([section, items]) => {
-          const visible = items.filter(i => !i.removed)
-          const accepted = visible.filter(i => i.accepted).length
+        {SCOPE_CATEGORIES.map((category) => {
+          const visible = sections[category].filter((i) => i.status !== 'removed')
+          if (visible.length === 0) return null
+          const accepted = visible.filter((i) => i.status === 'accepted').length
           return (
-            <div key={section} style={cardStyle}>
+            <div key={category} style={cardStyle}>
               <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
                 <div className="flex items-center gap-8">
-                  <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#6B5254' }}>{section}</span>
-                  <span style={{ fontSize: 10, fontFamily: 'DM Mono, monospace', padding: '2px 8px', background: SECTION_COLOR[section] || '#F3EADB', borderRadius: 10, color: '#6B5254' }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#6B5254' }}>
+                    {SCOPE_CATEGORY_LABELS[category]}
+                  </span>
+                  <span style={{ fontSize: 10, fontFamily: 'DM Mono, monospace', padding: '2px 8px', background: SECTION_COLOR[category], borderRadius: 10, color: '#6B5254' }}>
                     {accepted}/{visible.length} accepted
                   </span>
                 </div>
-                <button style={{ fontSize: 11, color: '#7A6063', background: 'none', border: 'none', cursor: 'pointer' }}>+ Add item</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {visible.map(item => (
@@ -128,13 +133,13 @@ export default function ScopeReview() {
                       alignItems: 'flex-start',
                       gap: 10,
                       padding: '8px 10px',
-                      background: item.accepted ? '#F7F9F2' : '#FAF5EB',
-                      border: `1px solid ${item.accepted ? '#BFD1AE' : '#E8DCC6'}`,
+                      background: item.status === 'accepted' ? '#F7F9F2' : '#FAF5EB',
+                      border: `1px solid ${item.status === 'accepted' ? '#BFD1AE' : '#E8DCC6'}`,
                       borderRadius: 4,
                     }}
                   >
-                    <span style={{ fontSize: 14, marginTop: 1, color: item.accepted ? '#4F7A4A' : '#ccc', flexShrink: 0 }}>
-                      {item.accepted ? '✓' : '○'}
+                    <span style={{ fontSize: 14, marginTop: 1, color: item.status === 'accepted' ? '#4F7A4A' : '#ccc', flexShrink: 0 }}>
+                      {item.status === 'accepted' ? '✓' : '○'}
                     </span>
                     <div style={{ flex: 1, fontSize: 13, lineHeight: 1.5 }}>
                       {editing === item.id ? (
@@ -145,7 +150,7 @@ export default function ScopeReview() {
                             style={{ flex: 1, padding: '4px 8px', border: '1px solid #bbb', borderRadius: 3, fontSize: 13, fontFamily: 'inherit' }}
                             autoFocus
                           />
-                          <button onClick={() => saveEdit(section, item.id)} style={{ fontSize: 12, padding: '4px 10px', background: '#722F37', color: '#fff', border: 'none', borderRadius: 3, cursor: 'pointer' }}>Save</button>
+                          <button onClick={() => saveEdit(item.id)} style={{ fontSize: 12, padding: '4px 10px', background: '#722F37', color: '#fff', border: 'none', borderRadius: 3, cursor: 'pointer' }}>Save</button>
                           <button onClick={() => setEditing(null)} style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #CDBFAB', borderRadius: 3, cursor: 'pointer', background: '#fff' }}>Cancel</button>
                         </div>
                       ) : (
@@ -154,18 +159,15 @@ export default function ScopeReview() {
                     </div>
                     {editing !== item.id && (
                       <div className="flex gap-4" style={{ flexShrink: 0 }}>
-                        {!item.accepted && (
-                          <button onClick={() => accept(section, item.id)} style={miniBtn('#4F7A4A', '#DDE7D0')}>Accept</button>
+                        {item.status !== 'accepted' && (
+                          <button onClick={() => accept(item.id)} style={miniBtn('#4F7A4A', '#DDE7D0')}>Accept</button>
                         )}
                         <button onClick={() => startEdit(item.id, item.text)} style={miniBtn('#722F37', '#F3EADB')}>Edit</button>
-                        <button onClick={() => remove(section, item.id)} style={miniBtn('#A83A4A', '#F3D9D5')}>Remove</button>
+                        <button onClick={() => remove(item.id)} style={miniBtn('#A83A4A', '#F3D9D5')}>Remove</button>
                       </div>
                     )}
                   </div>
                 ))}
-                {visible.length === 0 && (
-                  <div style={{ fontSize: 12, color: '#999', padding: '8px 10px', fontStyle: 'italic' }}>All items removed</div>
-                )}
               </div>
             </div>
           )

@@ -14,6 +14,9 @@ from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB, UUID
 from app.domain.common import (
     ConstraintMode,
     DependencyType,
+    DocumentKind,
+    ItemOrigin,
+    JobStatus,
     NotificationLevel,
     OrgRole,
     ProjectMethodology,
@@ -23,6 +26,8 @@ from app.domain.common import (
     ProjectType,
     ProjectVisibility,
     RecommendationType,
+    ScopeCategory,
+    ScopeStatus,
     SolverStatus,
 )
 
@@ -130,6 +135,56 @@ solver_status = _pg_enum(SolverStatus, "solver_status")
 dependency_type = _pg_enum(DependencyType, "dependency_type")
 constraint_mode = _pg_enum(ConstraintMode, "constraint_mode")
 recommendation_type = _pg_enum(RecommendationType, "recommendation_type")
+
+# --------------------------------------------------------------------------- intake / scope
+document_kind = _pg_enum(DocumentKind, "document_kind")
+job_status = _pg_enum(JobStatus, "job_status")
+scope_category = _pg_enum(ScopeCategory, "scope_category")
+scope_status = _pg_enum(ScopeStatus, "scope_status")
+item_origin = _pg_enum(ItemOrigin, "item_origin")
+
+source_documents = sa.Table(
+    "source_documents",
+    metadata,
+    sa.Column("id", _uuid, primary_key=True),
+    sa.Column("project_id", _uuid, nullable=False),
+    sa.Column("kind", document_kind, nullable=False),
+    sa.Column("title", sa.Text, nullable=False),
+    sa.Column("content_text", sa.Text),
+    sa.Column("created_at", _ts, nullable=False),
+)
+
+intake_runs = sa.Table(
+    "intake_runs",
+    metadata,
+    sa.Column("id", _uuid, primary_key=True),
+    sa.Column("project_id", _uuid, nullable=False),
+    sa.Column("status", job_status, nullable=False),
+    sa.Column("model", sa.Text),
+    sa.Column("input_tokens", sa.Integer),
+    sa.Column("output_tokens", sa.Integer),
+    sa.Column("items_extracted", sa.Integer),
+    sa.Column("error", sa.Text),
+    sa.Column("created_at", _ts, nullable=False),
+    sa.Column("started_at", _ts),
+    sa.Column("finished_at", _ts),
+)
+
+scope_items = sa.Table(
+    "scope_items",
+    metadata,
+    sa.Column("id", _uuid, primary_key=True),
+    sa.Column("project_id", _uuid, nullable=False),
+    sa.Column("intake_run_id", _uuid),
+    sa.Column("category", scope_category, nullable=False),
+    sa.Column("text", sa.Text, nullable=False),
+    sa.Column("confidence", sa.REAL),
+    sa.Column("status", scope_status, nullable=False),
+    sa.Column("origin", item_origin, nullable=False),
+    sa.Column("sort_order", sa.Integer, nullable=False),
+    sa.Column("created_at", _ts, nullable=False),
+    sa.Column("updated_at", _ts, nullable=False),
+)
 
 skills = sa.Table(
     "skills",

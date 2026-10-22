@@ -9,7 +9,9 @@ from fastapi import Depends, Path, Request
 
 from app.core.db import UserDB
 from app.core.errors import ServiceUnavailableError
+from app.jobs.intake import IntakeRunner
 from app.jobs.optimizer import OptimizationRunner
+from app.repositories.intake import IntakeRepository
 from app.repositories.me import ProfileRepository
 from app.repositories.notifications import NotificationRepository
 from app.repositories.optimization import OptimizationRepository
@@ -44,15 +46,29 @@ def get_optimization_runner(request: Request) -> OptimizationRunner:
     return runner
 
 
+def get_intake_repo(db: UserDB) -> IntakeRepository:
+    return IntakeRepository(db)
+
+
+def get_intake_runner(request: Request) -> IntakeRunner:
+    intaker: IntakeRunner | None = getattr(request.app.state, "intaker", None)
+    if intaker is None:
+        raise ServiceUnavailableError("AI intake is not available")
+    return intaker
+
+
 Profiles = Annotated[ProfileRepository, Depends(get_profile_repo)]
 Orgs = Annotated[OrgRepository, Depends(get_org_repo)]
 Projects = Annotated[ProjectRepository, Depends(get_project_repo)]
 Notifications = Annotated[NotificationRepository, Depends(get_notification_repo)]
 OptimizationRuns = Annotated[OptimizationRepository, Depends(get_optimization_repo)]
 Optimizer = Annotated[OptimizationRunner, Depends(get_optimization_runner)]
+Intakes = Annotated[IntakeRepository, Depends(get_intake_repo)]
+Intaker = Annotated[IntakeRunner, Depends(get_intake_runner)]
 
 # Path parameters are camelCase on the wire, like everything else.
 OrgId = Annotated[uuid.UUID, Path(alias="orgId")]
 ProjectId = Annotated[uuid.UUID, Path(alias="projectId")]
 NotificationId = Annotated[uuid.UUID, Path(alias="notificationId")]
 RunId = Annotated[uuid.UUID, Path(alias="runId")]
+ItemId = Annotated[uuid.UUID, Path(alias="itemId")]
